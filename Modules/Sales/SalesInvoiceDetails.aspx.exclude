@@ -1,0 +1,346 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="SalesInvoiceDetails.aspx.cs" Inherits="Modules_Sales_Default" %>
+<%@ Register TagPrefix="RTE" Namespace="RTE" Assembly="RichTextEditor" %> 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+
+
+         <script type="text/javascript">
+
+             function grosscalc() {
+                 var Tax, grossamt, TOTAL, dis;
+                 Tax = document.getElementById('<%=txttax.ClientID %>').value;
+                 dis = document.getElementById('<%=txtdiscount.ClientID %>').value;
+                // grossamt = parseFloat(document.getElementById('<%=txttotal.ClientID %>').value);
+                 grossamt = parseFloat(document.getElementById('<%=txtGrossTotalAmtHidden.ClientID %>').value);
+    if (Tax == "" || Tax == "0" || isNaN(Tax)) { Tax = "0"; }
+    if (dis == "" || dis == "0" || isNaN(dis)) { dis = "0"; }
+    if (grossamt == "" || grossamt == "0" || isNaN(grossamt)) { grossamt = "0"; }
+    TOTAL = parseFloat(grossamt);
+    TOTAL = TOTAL + ((Tax * TOTAL) / 100);
+    TOTAL = TOTAL - ((dis * TOTAL) / 100);
+
+    document.getElementById('<%=txttotal.ClientID %>').value = parseInt(TOTAL);
+        }
+
+
+
+
+    </script>
+
+         
+       
+    <script type="text/javascript">
+        //On Page Load
+        $(function () {
+            $(".select-full").select2();
+            //$("#select-full").select2();
+            //$("#tabs").tabs();
+        });
+
+        //On UpdatePanel Refresh
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        if (prm != null) {
+            prm.add_endRequest(function (sender, e) {
+                if (sender._postBackSettings.panelsToUpdate != null) {
+                    $(".select-full").select2();
+                    //$("#select-full").select2();
+                    //$("#tabs").tabs();
+                }
+            });
+        };
+    </script>
+
+    <script type="text/javascript">
+<!--
+    function Check_Click(objRef) {
+        //Get the Row based on checkbox
+        var row = objRef.parentNode.parentNode;
+
+        //Get the reference of GridView
+        var GridView = row.parentNode;
+
+        //Get all input elements in Gridview
+        var inputList = GridView.getElementsByTagName("input");
+
+        for (var i = 0; i < inputList.length; i++) {
+            //The First element is the Header Checkbox
+            var headerCheckBox = inputList[0];
+
+            //Based on all or none checkboxes
+            //are checked check/uncheck Header Checkbox
+            var checked = true;
+            if (inputList[i].type == "checkbox" && inputList[i] != headerCheckBox) {
+                if (!inputList[i].checked) {
+                    checked = false;
+                    break;
+                }
+            }
+        }
+        headerCheckBox.checked = checked;
+
+    }
+    function checkAll(objRef) {
+        var GridView = objRef.parentNode.parentNode.parentNode;
+        var inputList = GridView.getElementsByTagName("input");
+        for (var i = 0; i < inputList.length; i++) {
+            var row = inputList[i].parentNode.parentNode;
+            if (inputList[i].type == "checkbox" && objRef != inputList[i]) {
+                if (objRef.checked) {
+                    inputList[i].checked = true;
+                }
+                else {
+                    if (row.rowIndex % 2 == 0) {
+                        row.style.backgroundColor = "#C2D69B";
+                    }
+                    else {
+                        row.style.backgroundColor = "white";
+                    }
+                    inputList[i].checked = false;
+                }
+            }
+        }
+    }
+    //-->
+    </script>
+
+    <cc1:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></cc1:ToolkitScriptManager>
+
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Always">
+        <ContentTemplate>
+            <!-- Page header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h3>Sales Invoice</h3>
+                </div>
+            </div>
+            <!-- /page header -->
+
+            <!-- Breadcrumbs line -->
+            <div class="breadcrumb-line">
+                <ul class="breadcrumb">
+                    <li><a href="SalesInvoice.aspx">Sales Invoice</a></li>
+                    <li class="active">Sales Invoice Details</li>
+                </ul>
+            </div>
+            <!-- /breadcrumbs line -->
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title"><i class="icon-pencil"></i>Sales Invoice Details</h6>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Sales Invoice No :</label>
+                                <asp:TextBox ID="txtInvoiceNo" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Sales Invoice Date:  </label>
+                                <asp:TextBox ID="txtinvoicedate" name="trigger" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:Image
+                                    ID="imgQuotationDate" class="ui-datepicker-trigger" runat="server" ImageUrl="~/images/calendar.png"></asp:Image>
+                                <cc1:CalendarExtender Format="dd/MM/yyyy" ID="Calendarextender2" runat="server" PopupButtonID="imgQuotationDate"
+                                    TargetControlID="txtinvoicedate">
+                                </cc1:CalendarExtender>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Sales Order No:  </label>
+                                <asp:DropDownList ID="ddlSalesorderNo" TabIndex="2" CssClass="select-full" runat="server" OnSelectedIndexChanged="ddlSalesorderNo_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Sales Order Date:  </label>
+                                <asp:TextBox ID="txtSOdate" name="trigger" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:Image
+                                    ID="Image1" class="ui-datepicker-trigger" runat="server" ImageUrl="~/images/calendar.png"></asp:Image>
+                                <cc1:CalendarExtender Format="dd/MM/yyyy" ID="Calendarextender1" runat="server" PopupButtonID="Image1"
+                                    TargetControlID="txtSOdate">
+                                </cc1:CalendarExtender>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Client Name :  </label>
+                                <asp:DropDownList ID="ddlCustomer" TabIndex="2" CssClass="select-full" runat="server" OnSelectedIndexChanged="ddlCustomer_SelectedIndexChanged"></asp:DropDownList>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Site Name :  </label>
+                                <asp:DropDownList ID="ddlUnit" TabIndex="2" CssClass="select-full" OnSelectedIndexChanged="ddlUnit_SelectedIndexChanged"   runat="server"></asp:DropDownList>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Billing Address:  </label>
+                                <asp:TextBox ID="txtbillingAddress" TextMode="MultiLine" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Place of Supply :  </label>
+                                <asp:TextBox ID="txtplaceofsupply" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Payment Terms :  </label>
+                                <asp:DropDownList ID="ddlpaymentterms" TabIndex="2" CssClass="select-full" runat="server"></asp:DropDownList>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Due Date :  </label>
+                                <asp:TextBox ID="txtduedate" name="trigger" CssClass="form-control" runat="server"></asp:TextBox>
+                                <asp:Image
+                                    ID="Image2" class="ui-datepicker-trigger" runat="server" ImageUrl="~/images/calendar.png"></asp:Image>
+                                <cc1:CalendarExtender Format="dd/MM/yyyy" ID="Calendarextender3" runat="server" PopupButtonID="Image2"
+                                    TargetControlID="txtduedate">
+                                </cc1:CalendarExtender>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row" style="padding-top: 30px">
+                            <asp:GridView ID="gvSoitems" CssClass="table table-striped table-bordered" runat="server" AutoGenerateColumns="False"
+                                Width="100%" OnRowDataBound="gvSoitems_RowDataBound">
+                                <Columns>
+                                    <asp:TemplateField>
+        <HeaderTemplate>
+            <asp:CheckBox ID="chkAll" runat="server" onclick = "checkAll(this);" 
+            AutoPostBack = "true"  OnCheckedChanged = "CheckBox_CheckChanged"/>
+        </HeaderTemplate> 
+        <ItemTemplate>
+            <asp:CheckBox ID="chk" runat="server" onclick = "Check_Click(this)" 
+            AutoPostBack = "true"  OnCheckedChanged = "CheckBox_CheckChanged" />
+        </ItemTemplate>
+    </asp:TemplateField>
+                                    <asp:BoundField DataField="Series" HeaderText="Series" />
+                                    <asp:BoundField DataField="Description" HeaderText="Description" />
+                                    <asp:BoundField DataField="Glass" HeaderText="Glass" />
+                                    <asp:BoundField DataField="Mesh" HeaderText="Mesh" />
+                                    <asp:BoundField DataField="Width" HeaderText="Width" />
+                                    <asp:BoundField DataField="Height" HeaderText="Height" />
+                                    <asp:BoundField DataField="Qty" HeaderText="Qty" />
+                                    <asp:BoundField DataField="Areasq" HeaderText="Area Sq Mtr" />
+                                     <asp:BoundField DataField="Amount" HeaderText="Amount" />
+                                     <asp:BoundField DataField="SeriesID" HeaderText="SeriesID" />
+                                    <asp:BoundField DataField="Id" HeaderText="Id" />
+                                </Columns>
+                                <EmptyDataTemplate>
+                                    <div style="text-align: center">
+                                        <span class="auto-style1" style="color: #CC0000">No Records Added</span>
+                                    </div>
+                                </EmptyDataTemplate>
+                            </asp:GridView>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h6 class="panel-title">Add Invoice Items</h6>
+                        </div>
+                        <div class="panel-body">
+                          <div class="form-group">
+                            <div class="row" style="padding-top: 30px">
+                                <asp:GridView ID="gvitems" CssClass="table table-striped table-bordered" OnRowDataBound="gvitems_RowDataBound" runat="server" AutoGenerateColumns="False"
+                                    Width="100%" >
+                                    <Columns>
+                                      
+                                        <asp:BoundField DataField="Series" HeaderText="Series" />
+                                        <asp:BoundField DataField="Description" HeaderText="Description" />
+                                        <asp:BoundField DataField="Glass" HeaderText="Glass" />
+                                         <asp:BoundField DataField="Mesh" HeaderText="Mesh" />
+                                        <asp:BoundField DataField="Width" HeaderText="Width" />
+                                        <asp:BoundField DataField="Height" HeaderText="Height" />
+                                        <asp:BoundField DataField="Qty" HeaderText="Qty" />
+                                        <asp:BoundField DataField="Areasq" HeaderText="Area Sq Mtr" />
+                                        <asp:BoundField DataField="Amount" HeaderText="Amount INR" />
+                                        <asp:BoundField DataField="SeriesID" HeaderText="SeriesID" />
+                                      
+                                    </Columns>
+                                    <EmptyDataTemplate>
+                                        <div style="text-align: center">
+                                            <span class="auto-style1" style="color: #CC0000">No Records Added</span>
+                                        </div>
+                                    </EmptyDataTemplate>
+                                </asp:GridView>
+                            </div>
+                          </div>
+
+
+                           <div class="panel-body">
+					<div class="row invoice-payment">
+						<div class="col-sm-8">
+							<div class="form-group">
+                                 <label>Message Display On Invoice:  </label>
+                              <%--   <RTE:Editor runat="server" ID="txtremarks" Height="210px" Width="100%" ToolbarItems="paragraphs ,justifyleft ,justifycenter,justifyright,forecolor,backcolor,bold " />--%>
+                                 <asp:TextBox ID="txtremarks" TextMode="MultiLine" Rows="5" CssClass="form-control" runat="server"></asp:TextBox>
+							</div>
+						</div>
+                        
+						<div class="col-sm-4">
+							<h6>Total:</h6>
+							<table class="table">
+								<tbody>
+									<tr>
+										<th>Subtotal :</th>
+										<td class="text-right">
+                                       <asp:TextBox ID="txtsubtotal" CssClass="form-control" runat="server"></asp:TextBox></td>
+									</tr>
+									<tr>
+										<th>Discount(%) :</th>
+										<td class="text-right"> <asp:TextBox ID="txtdiscount" CssClass="form-control" runat="server"></asp:TextBox></td>
+									</tr>
+									<tr>
+										<th>Tax(%) :</th>
+											<td class="text-right"> <asp:TextBox ID="txttax" CssClass="form-control" runat="server"></asp:TextBox></td>
+									</tr>
+                                    <tr>
+										<th>Grand Total :</th>
+											<td class="text-right"> <asp:TextBox ID="txttotal" CssClass="form-control" runat="server"></asp:TextBox>
+                                                <asp:HiddenField ID="txtGrossTotalAmtHidden" runat="server" />
+                                        </td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+                        </div>
+
+
+                            <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                              <label>Prepared By:  </label>
+                              <asp:DropDownList ID="ddlpreparedby" TabIndex="2" CssClass="select-full" runat="server"></asp:DropDownList>
+                        </div>
+                            <div class="col-md-4">
+                              <label>Approved By:  </label>
+                              <asp:DropDownList ID="ddlapprovedby" TabIndex="2" CssClass="select-full" runat="server"></asp:DropDownList>
+                           </div>
+                            </div>
+                    </div>
+
+
+
+
+                    </div>
+
+                    </div>
+
+                <div class="form-actions text-right">
+                          <asp:Button ID="btnPrint" runat="server" CssClass="btn btn-warning" Text="Print" />
+                          <asp:Button ID="btnApprove" runat="server" CssClass="btn btn-success" Text="Approve" />
+                          <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="btnSave_Click"  />
+                </div>
+
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
+</asp:Content>

@@ -1,0 +1,47 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="NLMainModulesLeft.master.cs" Inherits="MasterForms_NLMainModulesLeft" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+
+    <div class="page-container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+
+                <!-- Main navigation -->
+                <ul class="navigation">
+
+                    <li class="active">
+                        <a href="#"><span>Modules</span> <i class="icon-screen2"></i></a></li>
+                    <%-- <ul>--%>
+                    <li><a href="../Masters/MastersHome.aspx"><span>Masters</span><i class="icon-wrench2"></i></a></li>
+                    <li><a href="../Sales/SalesHome.aspx"><i class="icon-stats-up"></i><span>Sales</span></a></li>
+                    <li><a href="../Purchases/PurchaseHome.aspx"><i class="icon-tags"></i><span>Purchase</span></a></li>
+                    <li><a href="../Stock/ManufacturingHome.aspx"><i class="icon-cube"></i><span>Manufacture</span></a></li>
+                    <li><a href="../Stock/StockHome.aspx"><i class="icon-stack"></i><span>Stock</span></a></li>
+                    <li><a href="#"><i class="icon-coin"></i><span>Finance</span></a></li>
+                    <li><a href="../HR/HrHome.aspx"><i class="icon-users"></i><span>HR</span></a></li>
+
+                    <%-- <li><a href="../Sales/CustomerMaster.aspx">Masters</a></li>
+                             <li><a href="../Sales/SalesEnquiry.aspx">Sales</a></li>
+                             <li><a href="../Sales/SalesQuotation.aspx">Purchases</a></li>
+                            <li><a href="../Sales/SalesOrder.aspx">Production</a></li>
+                            <li><a href="../Sales/SalesQuotation.aspx">Inventory</a></li>
+                            <li><a href="../Sales/SalesInvoice.aspx">HR</a></li>
+                             <li><a href="../Sales/SalesInvoice.aspx">Finance</a></li>--%>
+                    <%-- </ul>--%>
+                </ul>
+                <!-- /main navigation -->
+            </div>
+        </div>
+        <!-- /sidebar -->
+
+        <div class="page-content">
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </div>
+</asp:Content>

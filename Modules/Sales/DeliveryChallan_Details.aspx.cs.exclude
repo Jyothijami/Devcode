@@ -1,0 +1,257 @@
+﻿using phani.Classes;
+using phani.MessageBox;
+using Phani.Modules;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Modules_Sales_DeliveryChallan_Details : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            //  gvQuatation.DataBind();
+            SM.CustomerMaster.CustomerMaster_Select(ddlCustomer);
+            SM.CustomerMaster.CustomerUnit_Select(ddlUnit);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlpreparedby);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlapprovedby);
+            SM.SalesOrder.SalesOrder_Select(ddlSalesorderNo);
+            txtDCNo.Text = SM.DeliveryChallan.DeliveryChallan_AutoGenCode();
+            Masters.MaterialMaster.MaterialMaster_Select(ddlItemSeries);
+            Masters.DespatchMode.DespatchMode_Select(ddlDispacthMode);
+            Masters.StorageLocation.StorageLocation_Select(ddlItemPickup);
+        }
+    }
+    protected void ddlSalesorderNo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.SalesOrder obj = new SM.SalesOrder();
+
+        if(obj.SalesOrder_Select(ddlSalesorderNo.SelectedItem.Value) > 0)
+        {
+            txtSOdate.Text = obj.SODATE;
+            ddlCustomer.SelectedValue = obj.Custid;
+            ddlUnit.SelectedValue = obj.SiteId;
+            obj.SalesOrder_Select(ddlSalesorderNo.SelectedItem.Value, gvSoitems);
+        }
+    }
+    protected void btnadditem_Click(object sender, EventArgs e)
+    {
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("Series");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Description");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Glass");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Mesh");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Width");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Height");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Qty");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Location");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Remarks");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("LocationId");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("SeriesID");
+        SalesOrderItems.Columns.Add(col);
+
+
+        if (gvitems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvitems.Rows)
+            {
+                if (gvitems.SelectedIndex > -1)
+                {
+                    if (gvrow.RowIndex == gvitems.SelectedRow.RowIndex)
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["Series"] = ddlItemSeries.SelectedItem.Text;
+                        dr["Description"] = txtItemDescription.Text; ;
+
+                        dr["Mesh"] = txtmesh.Text;
+                        dr["Glass"] = txtItemGlass.Text;
+                        dr["Width"] = txtitemwidth.Text;
+                        dr["Height"] = txtHeight.Text;
+                        dr["Qty"] = txtitemqty.Text;
+                        dr["Location"] = ddlItemPickup.SelectedItem.Text;
+                        dr["Remarks"] = txtItemRemarks.Text;
+                        dr["LocationId"] = ddlItemPickup.SelectedItem.Value;
+                        dr["SeriesID"] = ddlItemSeries.SelectedItem.Value;
+
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                    else
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["Series"] = gvrow.Cells[1].Text;
+                        dr["Description"] = gvrow.Cells[2].Text;
+                        dr["Glass"] = gvrow.Cells[3].Text;
+                        dr["Mesh"] = gvrow.Cells[4].Text;
+
+                        dr["Width"] = gvrow.Cells[5].Text;
+                        dr["Height"] = gvrow.Cells[6].Text;
+                        dr["Qty"] = gvrow.Cells[7].Text;
+                        dr["Location"] = gvrow.Cells[8].Text;
+                        dr["Remarks"] = gvrow.Cells[9].Text;
+                        dr["LocationId"] = gvrow.Cells[10].Text;
+                        dr["SeriesID"] = gvrow.Cells[11].Text;
+
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                }
+                else
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["Series"] = gvrow.Cells[1].Text;
+                    dr["Description"] = gvrow.Cells[2].Text;
+                    dr["Glass"] = gvrow.Cells[3].Text;
+                    dr["Mesh"] = gvrow.Cells[4].Text;
+
+                    dr["Width"] = gvrow.Cells[5].Text;
+                    dr["Height"] = gvrow.Cells[6].Text;
+                    dr["Qty"] = gvrow.Cells[7].Text;
+                    dr["Location"] = gvrow.Cells[8].Text;
+                    dr["Remarks"] = gvrow.Cells[9].Text;
+                    dr["LocationId"] = gvrow.Cells[10].Text;
+                    dr["SeriesID"] = gvrow.Cells[11].Text;
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+
+
+        if (gvitems.SelectedIndex == -1)
+        {
+            DataRow drnew = SalesOrderItems.NewRow();
+            drnew["Series"] = ddlItemSeries.SelectedItem.Text;
+            drnew["Description"] = txtItemDescription.Text; ;
+
+            drnew["Mesh"] = txtmesh.Text;
+            drnew["Glass"] = txtItemGlass.Text;
+            drnew["Width"] = txtitemwidth.Text;
+            drnew["Height"] = txtHeight.Text;
+            drnew["Qty"] = txtitemqty.Text;
+            drnew["Location"] = ddlItemPickup.SelectedItem.Text;
+            drnew["Remarks"] = txtItemRemarks.Text;
+            drnew["LocationId"] = ddlItemPickup.SelectedItem.Value;
+            drnew["SeriesID"] = ddlItemSeries.SelectedItem.Value;
+            SalesOrderItems.Rows.Add(drnew);
+        }
+        gvitems.DataSource = SalesOrderItems;
+        gvitems.DataBind();
+        gvitems.SelectedIndex = -1;
+    }
+    protected void gvitems_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        string x1 = gvitems.Rows[e.RowIndex].Cells[1].Text;
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("Series");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Description");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Glass");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Mesh");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Width");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Height");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Qty");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Location");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Remarks");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("LocationId");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("SeriesID");
+        SalesOrderItems.Columns.Add(col);
+        if (gvitems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvitems.Rows)
+            {
+                if (gvrow.RowIndex != e.RowIndex)
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["Series"] = gvrow.Cells[1].Text;
+                    dr["Description"] = gvrow.Cells[2].Text;
+                    dr["Glass"] = gvrow.Cells[3].Text;
+                    dr["Mesh"] = gvrow.Cells[4].Text;
+
+                    dr["Width"] = gvrow.Cells[5].Text;
+                    dr["Height"] = gvrow.Cells[6].Text;
+                    dr["Qty"] = gvrow.Cells[7].Text;
+                    dr["Location"] = gvrow.Cells[8].Text;
+                    dr["Remarks"] = gvrow.Cells[9].Text;
+                    dr["LocationId"] = gvrow.Cells[10].Text;
+                    dr["SeriesID"] = gvrow.Cells[11].Text;
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+        gvitems.DataSource = SalesOrderItems;
+        gvitems.DataBind();
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            SM.DeliveryChallan objSM = new SM.DeliveryChallan();
+            objSM.DcNo = txtDCNo.Text;
+            objSM.DcDATE = General.toMMDDYYYY(txtDcdate.Text);
+            objSM.Soid = ddlSalesorderNo.SelectedItem.Value;
+            objSM.Lrdate = General.toMMDDYYYY(txtLRDate.Text);
+            objSM.PreparedBy = ddlpreparedby.SelectedItem.Value;
+            objSM.Approvedby = ddlapprovedby.SelectedItem.Value;
+            objSM.Custid = ddlCustomer.SelectedItem.Value;
+            objSM.SiteId = ddlUnit.SelectedItem.Value;
+            objSM.Transportid = ddlDispacthMode.SelectedItem.Value;
+            objSM.Lrno = txtLRNo.Text;
+
+
+            if (objSM.DeliveryChallan_Save() == "Data Saved Successfully")
+            {
+               // objSM.SalesQuotationDetails_Delete(objSM.SOID);
+                foreach (GridViewRow gvrow in gvitems.Rows)
+                {
+                    objSM.Matid = gvrow.Cells[11].Text;
+                    objSM.Description = gvrow.Cells[2].Text;
+                    objSM.Mesh = gvrow.Cells[4].Text;
+                    objSM.Glass = gvrow.Cells[3].Text;
+                    objSM.Width = gvrow.Cells[5].Text;
+                    objSM.Height = gvrow.Cells[6].Text;
+                    objSM.Qty = gvrow.Cells[7].Text;
+                    objSM.Pickupid = gvrow.Cells[10].Text;
+                    objSM.Remarks = gvrow.Cells[9].Text;
+
+                    objSM.DeliveryChallanDetails_Save();
+                }
+
+                MessageBox.Show(this, "Data Saved Successfully");
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(this, ex.Message.ToString());
+        }
+        finally
+        {
+
+        }
+    }
+}

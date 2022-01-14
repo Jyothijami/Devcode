@@ -1,0 +1,150 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="NLMain.master.cs" Inherits="Main" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+    <title>Alumil</title>
+
+   <%-- <asp:PlaceHolder ID="PlaceHolder1" runat="server">
+          <%: System.Web.Optimization.Scripts.Render("~/Optimized/Js") %>
+          <%: System.Web.Optimization.Styles.Render("~/Optimized/CSS") %>
+    </asp:PlaceHolder>--%>
+       <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/londinium-theme.css" rel="stylesheet" type="text/css" />
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/select2.min.css" rel="stylesheet" type="text/css" />
+   
+    <%--<link href="Content/ej/web/default-theme/ej.web.all.min.css" rel="stylesheet"  />--%>
+    <script>
+        $(function () {
+            initdropdown();
+          
+        })
+
+        function initdropdown() {
+            $('.select-full').select2();
+        }
+
+     
+    </script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <%-- <cc1:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></cc1:ToolkitScriptManager>
+       <%-- <asp:ScriptManager ID="SManger" runat="server"></asp:ScriptManager>
+      <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            <ContentTemplate>--%>
+
+       <script type="text/javascript">
+
+           Sys.Application.add_load(initdropdown);
+        </script>
+
+
+        <!-- Navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img src="/images/logo.png" alt="Alumil" /></a>
+
+               <%--   <a class="sidebar-toggle"><i class="icon-paragraph-justify2"></i></a>--%>
+                        
+
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                            <span class="sr-only">Toggle menu</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>
+
+                        <button type="button" class="navbar-toggle offcanvas">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>
+
+
+
+            </div>
+
+            <ul class="nav navbar-nav collapse" id="navbar-menu">
+
+                <li><asp:LinkButton ID="lbtnmasters" OnClick="lbtnmasters_Click" Text="" runat="server"><i class="icon-wrench2"></i> <span>Masters</span></asp:LinkButton> </li>
+                  <li><asp:LinkButton ID="lbtnSales" OnClick="lbtnSales_Click" Text="" runat="server"><i class="icon-stats-up"></i><span>Sales</span></asp:LinkButton> </li>
+                
+               
+                
+                
+                
+                
+                   <%-- <li><a href="../Masters/MastersHome.aspx"><span>Masters</span><i class="icon-wrench2"></i></a></li>--%>
+                    <li><a href="../Sales/SalesHome.aspx"><i class="icon-stats-up"></i><span>Sales</span></a></li>
+                    <li><a href="../Purchases/PurchaseHome.aspx"><i class="icon-tags"></i><span>Purchase</span></a></li>
+                    <li><a href="../Stock/ManufacturingHome.aspx"><i class="icon-cube"></i><span>Manufacture</span></a></li>
+                    <li><a href="../Stock/StockHome.aspx"><i class="icon-stack"></i><span>Stock</span></a></li>
+                    <li><a href="#"><i class="icon-coin"></i><span>Finance</span></a></li>
+                    <li><a href="../HR/HrHome.aspx"><i class="icon-users"></i><span>HR</span></a></li>
+
+
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right collapse" id="navbar-icons">
+                <li class="user dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="/images/user.png" alt="" />
+                        <span>
+                            <asp:Label ID="lblUserName" runat="server" Text=""></asp:Label></span>
+                        <asp:Label ID="lblEmpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <asp:Label ID="lblCpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right icons-right">
+                        <li><a href="#"><i class="icon-user"></i>Profile</a></li>
+                        <li><a href="#"><i class="icon-cog"></i>Settings</a></li>
+                        <li><a href="~/Login.aspx" runat="server"><i class="icon-exit"></i>Logout</a></li>
+                        <%--  <li>
+                                 <asp:LinkButton ID="lbtnlogout" runat="server" OnClick="lbtnlogout_Click"><i class="icon-exit">Logout</asp:LinkButton></li>--%>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /navbar -->
+
+        <!-- Page container -->
+
+        <div class="page-container">
+
+             <div class="page-content">
+            <!-- Page content -->
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+                 </div>
+        </div>
+        <!-- /page container -->
+
+        <%--   <%: System.Web.Optimization.Scripts.Render("~/bundle/js") %>--%>
+        <%-- </ContentTemplate>
+        </asp:UpdatePanel>--%>
+    </form>
+
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery-ui.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/bootstrap.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/application_blank.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/interface/datatables.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/validate.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/select2.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/interface/jgrowl.min.js") %>'></script>
+<%--    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/wysihtml5/wysihtml5.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/wysihtml5/toolbar.js") %>'></script>--%>
+</body>
+</html>

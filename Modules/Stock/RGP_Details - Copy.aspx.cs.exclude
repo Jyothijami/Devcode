@@ -1,0 +1,362 @@
+﻿using phani.Classes;
+using phani.MessageBox;
+using Phani.Modules;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Modules_Stock_RGP_Details : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        string Qid = Request.QueryString["Cid"].ToString();
+        if (!IsPostBack)
+        {
+            Masters.MaterialMaster.MaterialMaster_Select(ddlitemCode);
+
+            txtrgpno.Text = SCM.RGP.RGP_AutoGenCode();
+            txtrgpDate.Text = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlPreparedBy);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlReceivedby);
+            Masters.ColorMaster.Color_Select(ddlColor);
+
+            ddlPreparedBy.SelectedValue = Alumil.Authentication.GetEmployeeInSession(Alumil.Authentication.Logged_EMP_Details.EmpId);
+
+
+           // gvItems.DataBind();
+            if (Qid != "Add")
+            {
+                CategoryFill();
+            }
+        }
+    }
+
+    private void CategoryFill()
+    {
+        SCM.RGP objmaster = new SCM.RGP();
+        if (objmaster.RGP_Select(Request.QueryString["Cid"].ToString()) > 0)
+        {
+            btnSave.Text = "Update";
+            txtrgpno.Text = objmaster.RgpNo;
+            txtrgpDate.Text = objmaster.RgpDate;
+            txtreceiverName.Text = objmaster.ReceiverName;
+            txtadress.Text = objmaster.Address;
+            ddlstatus.SelectedValue = objmaster.status;
+            txttermscondtionscontent.Text = HttpUtility.HtmlDecode(objmaster.Remarks);
+            ddlstatus.SelectedValue = objmaster.status;
+            objmaster.RGPDetails_Select(Request.QueryString["Cid"].ToString(), gvItems);
+            ddlReceivedby.SelectedValue = objmaster.ReceivedBy;
+            ddlPreparedBy.SelectedValue = objmaster.PreparedBy;
+
+        }
+    }
+
+    protected void btnadditem_Click(object sender, EventArgs e)
+    {
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("ItemCode");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Description");
+        SalesOrderItems.Columns.Add(col);
+      
+        col = new DataColumn("Uom");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Color");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ReqQty");
+        SalesOrderItems.Columns.Add(col);
+        //col = new DataColumn("Warehouse");
+        //SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Purpose");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Remarks");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ItemCodeId");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ColorId");
+        SalesOrderItems.Columns.Add(col);
+        
+        if (gvItems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvItems.Rows)
+            {
+                if (gvItems.SelectedIndex > -1)
+                {
+                    if (gvrow.RowIndex == gvItems.SelectedRow.RowIndex)
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["ItemCode"] = ddlitemCode.SelectedItem.Text;
+                        dr["Description"] = txtseries.Text;
+                      
+                        dr["Uom"] = txtUom.Text;
+                        dr["Color"] = ddlColor.SelectedItem.Text;
+                        dr["ReqQty"] = txtQty.Text;
+                        
+                        dr["ItemCodeId"] = ddlitemCode.SelectedItem.Value;
+                        dr["ColorId"] = ddlColor.SelectedItem.Value;
+                        dr["Purpose"] = txtpurpose.Text;
+                        dr["Remarks"] = txtremarks.Text;
+                        
+                       
+
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                    else
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["ItemCode"] = gvrow.Cells[1].Text;
+                        dr["Description"] = gvrow.Cells[2].Text;
+                      
+                        dr["Uom"] = gvrow.Cells[3].Text;
+                        dr["Color"] = gvrow.Cells[4].Text;
+                        dr["ReqQty"] = gvrow.Cells[5].Text;
+
+                        dr["Purpose"] = gvrow.Cells[6].Text;
+                        dr["Remarks"] = gvrow.Cells[7].Text;
+                        dr["ItemCodeId"] = gvrow.Cells[8].Text;
+                        dr["ColorId"] = gvrow.Cells[9].Text;
+                      
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                }
+                else
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["ItemCode"] = gvrow.Cells[1].Text;
+                    dr["Description"] = gvrow.Cells[2].Text;
+
+                    dr["Uom"] = gvrow.Cells[3].Text;
+                    dr["Color"] = gvrow.Cells[4].Text;
+                    dr["ReqQty"] = gvrow.Cells[5].Text;
+
+                    dr["Purpose"] = gvrow.Cells[6].Text;
+                    dr["Remarks"] = gvrow.Cells[7].Text;
+                    dr["ItemCodeId"] = gvrow.Cells[8].Text;
+                    dr["ColorId"] = gvrow.Cells[9].Text;
+
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+
+        if (gvItems.SelectedIndex == -1)
+        {
+            DataRow drnew = SalesOrderItems.NewRow();
+            drnew["ItemCode"] = ddlitemCode.SelectedItem.Text;
+            drnew["Description"] = txtseries.Text;
+            drnew["Uom"] = txtUom.Text;
+            drnew["Color"] = ddlColor.SelectedItem.Text;
+            drnew["ReqQty"] = txtQty.Text;
+            drnew["ItemCodeId"] = ddlitemCode.SelectedItem.Value;
+            drnew["ColorId"] = ddlColor.SelectedItem.Value;
+            drnew["Purpose"] = txtpurpose.Text;
+            drnew["Remarks"] = txtremarks.Text;
+            SalesOrderItems.Rows.Add(drnew);
+        }
+        gvItems.DataSource = SalesOrderItems;
+        gvItems.DataBind();
+        gvItems.SelectedIndex = -1;
+        Clear_Items();
+    }
+
+    private void Clear_Items()
+    {
+        //ddlitemCode.DataBind();
+        //ddlColor.DataBind();
+
+        Masters.MaterialMaster.MaterialMaster_Select(ddlitemCode);
+        Masters.ColorMaster.Color_Select(ddlColor);
+
+        txtseries.Text = "";
+        txtUom.Text = "";
+        txtQty.Text = "";
+        txtpurpose.Text = "";
+        txtremarks.Text = "";
+    }
+
+    protected void gvItems_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+        {
+            //e.Row.Cells[7].Visible = false;
+            e.Row.Cells[8].Visible = false;
+            e.Row.Cells[9].Visible = false;
+         
+        }
+
+       
+    }
+
+    protected void gvItems_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        string x1 = gvItems.Rows[e.RowIndex].Cells[0].Text;
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("ItemCode");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Description");
+        SalesOrderItems.Columns.Add(col);
+
+        col = new DataColumn("Uom");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Color");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ReqQty");
+        SalesOrderItems.Columns.Add(col);
+        //col = new DataColumn("Warehouse");
+        //SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Purpose");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Remarks");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ItemCodeId");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("ColorId");
+        SalesOrderItems.Columns.Add(col);
+        if (gvItems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvItems.Rows)
+            {
+                if (gvrow.RowIndex != e.RowIndex)
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["ItemCode"] = gvrow.Cells[1].Text;
+                    dr["Description"] = gvrow.Cells[2].Text;
+                    dr["Uom"] = gvrow.Cells[3].Text;
+                    dr["Color"] = gvrow.Cells[4].Text;
+                    dr["ReqQty"] = gvrow.Cells[5].Text;
+                    dr["Purpose"] = gvrow.Cells[6].Text;
+                    dr["Remarks"] = gvrow.Cells[7].Text;
+                    dr["ItemCodeId"] = gvrow.Cells[8].Text;
+                    dr["ColorId"] = gvrow.Cells[9].Text;
+
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+        gvItems.DataSource = SalesOrderItems;
+        gvItems.DataBind();
+    }
+
+    protected void ddlitemCode_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.MaterialMaster obj = new Masters.MaterialMaster();
+        if (obj.MaterialType_Select(ddlitemCode.SelectedItem.Value) > 0)
+        {
+            txtseries.Text = obj.Description;
+            txtUom.Text = obj.UomName;
+        }
+        //Masters.MaterialMaster.ItemMaster_ModelNoSelect(ddlColor, ddlitemCode.SelectedValue);
+    }
+
+
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (btnSave.Text == "Save")
+        {
+            po_Save();
+        }
+        else if (btnSave.Text == "Update")
+        {
+            po_Update();
+        }
+    }
+
+    private void po_Save()
+    {
+        try
+        {
+            SCM.RGP objMaster = new SCM.RGP();
+
+            objMaster.RgpNo = txtrgpno.Text;
+            objMaster.RgpDate = General.toMMDDYYYY(txtrgpDate.Text);
+            objMaster.status = ddlstatus.SelectedItem.Value;
+            objMaster.ReceiverName = txtreceiverName.Text;
+            objMaster.Address = txtadress.Text;
+            objMaster.Remarks = HttpUtility.HtmlEncode(txttermscondtionscontent.Text);
+            objMaster.PreparedBy = ddlPreparedBy.SelectedItem.Value;
+            objMaster.ReceivedBy = ddlReceivedby.SelectedItem.Value;
+
+            if (objMaster.RGP_Save() == "Data Saved Successfully")
+            {
+                foreach (GridViewRow gvRowOtherCorp in gvItems.Rows)
+                {
+                    objMaster.Itemcode = gvRowOtherCorp.Cells[8].Text;
+                    objMaster.ColorId = gvRowOtherCorp.Cells[9].Text;
+                    objMaster.Uom = gvRowOtherCorp.Cells[3].Text;
+                    objMaster.Qty = gvRowOtherCorp.Cells[5].Text;
+                    objMaster.Purpose = gvRowOtherCorp.Cells[6].Text;
+                    objMaster.DetRemarks = gvRowOtherCorp.Cells[7].Text;
+                    objMaster.ReceivedQty = "0";
+                    objMaster.RGPDetails_Save();
+                    objMaster.Stock_UpdatePQC(objMaster.Itemcode, objMaster.Qty, objMaster.ColorId);
+                }
+            }
+
+            MessageBox.Show(this, "Data Saved Successfully");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message);
+        }
+        finally
+        {
+            SCM.ClearControls(this);
+            SCM.Dispose();
+            Response.Redirect("~/Modules/Stock/RGP.aspx");
+        }
+    }
+
+    private void po_Update()
+    {
+        try
+        {
+            SCM.RGP objMaster = new SCM.RGP();
+            objMaster.RGPId = Request.QueryString["Cid"].ToString();
+            objMaster.RgpNo = txtrgpno.Text;
+            objMaster.RgpDate = General.toMMDDYYYY(txtrgpDate.Text);
+            objMaster.status = ddlstatus.SelectedItem.Value;
+            objMaster.ReceiverName = txtreceiverName.Text;
+            objMaster.Address = txtadress.Text;
+            objMaster.Remarks = HttpUtility.HtmlEncode(txttermscondtionscontent.Text);
+            objMaster.PreparedBy = ddlPreparedBy.SelectedItem.Value;
+            objMaster.ReceivedBy = ddlReceivedby.SelectedItem.Value;
+            if (objMaster.RGP_Update() == "Data Updated Successfully")
+            {
+                objMaster.RGPDetails_Delete(objMaster.RGPId);
+                foreach (GridViewRow gvRowOtherCorp in gvItems.Rows)
+                {
+                    objMaster.Itemcode = gvRowOtherCorp.Cells[8].Text;
+                    objMaster.ColorId = gvRowOtherCorp.Cells[9].Text;
+                    objMaster.Uom = gvRowOtherCorp.Cells[3].Text;
+                    objMaster.Qty = gvRowOtherCorp.Cells[5].Text;
+                    objMaster.Purpose = gvRowOtherCorp.Cells[6].Text;
+                    objMaster.DetRemarks = gvRowOtherCorp.Cells[7].Text;
+                    objMaster.ReceivedQty = "0";
+                    objMaster.RGPDetails_Save();
+                    objMaster.Stock_UpdatePQC(objMaster.Itemcode, objMaster.Qty, objMaster.ColorId);
+                }
+            }
+            MessageBox.Show(this, "Data Updated Successfully");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message);
+        }
+        finally
+        {
+            SCM.ClearControls(this);
+            SCM.Dispose();
+            Response.Redirect("~/Modules/Stock/RGP.aspx");
+        }
+    }
+
+  
+}

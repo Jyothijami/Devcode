@@ -1,0 +1,60 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="TestPage.aspx.cs" Inherits="Modules_Sales_TestPage" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+
+
+     <ej:DateTimePicker ID="DateTimePicker1" runat="server">
+        </ej:DateTimePicker>
+
+    <%--<ej:Grid ID="FlatGrid"  runat="server" AllowSorting="True" AllowPaging="True" IsResponsive="true">
+            <Columns>
+                <ej:Column Field="CUST_CODE" HeaderText="Customer Code"  TextAlign="Right" Width="75" />
+                <ej:Column Field="CUST_NAME" HeaderText="Customer Name" Width="80" />
+                <ej:Column Field="CUST_MOBILE" HeaderText="Mobile" TextAlign="Right" Width="75" Priority="4" />
+             
+            </Columns>
+                <EditSettings AllowEditing="True" AllowAdding="True" AllowDeleting="True"></EditSettings>
+               <ToolbarSettings ShowToolbar="True" ToolbarItems="add,edit,delete,update,cancel"></ToolbarSettings>
+        </ej:Grid>--%>
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading"><h5 class="panel-title">Testing</h5></div>
+        <div class="panel-body">
+
+
+            <div class="form-group">
+
+                <div class="dataTable">
+
+              <ej:Grid ID="FlatGrid"   runat="server" AllowSorting="True"  OnServerRowSelected="FlatGrid_ServerRowSelected" AllowPaging="True" IsResponsive="false">
+          
+                    <Columns>
+                <ej:Column Field="id" HeaderText="Customer Code"  TextAlign="Center" Width="75" />
+                <ej:Column Field="Name" HeaderText="Customer Name" TextAlign="Center" Width="80" />
+                <ej:Column Field="address" HeaderText="Mobile" TextAlign="Center" Width="75" Priority="4" />
+             
+            </Columns>
+                <EditSettings AllowEditing="True" AllowAdding="True" AllowDeleting="True"></EditSettings>
+               <ToolbarSettings ShowToolbar="True" ToolbarItems="add,edit,delete,update,cancel"></ToolbarSettings>
+                 
+        </ej:Grid>
+
+                </div>
+
+
+
+                <asp:Button ID="button" runat="server" Text="SelectedRow" OnClick="button_Click" />
+
+             <%--   <asp:DropDownList ID="hello" runat="server"></asp:DropDownList>
+                <ej:DropDownList ID="ddlhai" DataTextField="Name" DataValueField="id" runat="server" DataSourceCachingMode="None" ></ej:DropDownList>
+     --%>   </div>
+
+    </div>
+
+
+        </div>
+  
+</asp:Content>
+

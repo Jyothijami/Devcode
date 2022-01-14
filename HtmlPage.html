@@ -1,0 +1,56 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Calling Classic Web Services with jQuery</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    
+        //$(document).ready(function () {
+        //    $("a#SayHello").click(function (e) {
+        //        e.preventDefault();
+
+        //        $.ajax({
+        //            type: 'POST',
+        //            data: '{"name": "' + $("input#name").val() + '"}',
+        //            url: 'http://localhost:60949/Testing.asmx/Get',
+        //            contentType: 'application/json; charset=utf-8',
+        //            dataType: 'json',
+        //            success:
+        //              function (data, textStatus, XMLHttpRequest) {
+        //                  alert(data.d);
+        //              },
+        //            error:
+        //              function (XMLHttpRequest, textStatus, errorThrown) {
+        //                  alert(textStatus);
+        //              }
+        //        });
+        //    });
+        //});
+
+
+
+
+
+
+   
+   
+</head>
+<body>
+    <script type="text/javascript">
+        function GetAge() {
+            jQuery.support.cors = true;
+            $.ajax({
+                type: "get",
+                async: false,
+                url: 'http://localhost:60949/Testing.asmx/Get',
+                success: function (msg) {
+                    $('#divToBeWorkedOn').html(msg.text);
+
+                },
+                error: function (e) {
+                    $('#divToBeWorkedOn').html("unavailable");
+                }
+            });
+        }
+    </script>   
+    <div id="divToBeWorkedOn"></div></body>
+</html>

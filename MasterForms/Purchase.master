@@ -1,0 +1,38 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="Purchase.master.cs" Inherits="MasterForms_Purchase" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+
+   
+    <div class="page-container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+
+                <!-- Main navigation -->
+                <ul class="navigation">
+
+                    <li>
+                        <a href="#"><span>Purchases</span> <i class="icon-font"></i></a>
+                        <ul>
+                            <li><a href="../Home.aspx">Home</a></li>
+                            <li><a href="../Purchases/VendorMaster.aspx">Vendor Master</a></li>
+                            <li><a href="../Purchases/Indent.aspx">Indent</a></li>
+                            <li><a href="../Purchases/PurchaseOrder.aspx">Purchase Order</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- /main navigation -->
+            </div>
+        </div>
+        <!-- /sidebar -->
+
+        <div class="page-content">
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </div>
+</asp:Content>

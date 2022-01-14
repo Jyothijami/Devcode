@@ -1,0 +1,54 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="Sales.master.cs" Inherits="MasterForms_Sales" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+   
+
+       
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+   
+    <div class="page-container">
+
+         	<!-- Sidebar -->
+		<div class="sidebar">
+			<div class="sidebar-content">
+
+				<!-- Main navigation -->
+				<ul class="navigation">
+				
+					<li>
+						<a href="#"><span>Sales</span> <i class="icon-wrench"></i></a>
+						<ul>
+                           <li><a href="../Home.aspx">Home</a></li>
+							<li><a href="../Sales/CustomerMaster.aspx">Customer Master</a></li>
+                            <li><a href="../Sales/SalesEnquiry.aspx">Sales Enquiry</a></li>
+                            <li><a href="../Sales/SalesQuotation.aspx">Quotations</a></li>
+                            <li><a href="../Sales/SalesOrder.aspx">Sales Order</a></li>
+                            <li><a href="../Sales/SalesQuotation.aspx">Delivery</a></li>
+                            <li><a href="../Sales/SalesInvoice.aspx">Sales Invoice</a></li>
+						</ul>
+					</li>
+					
+				</ul>
+				<!-- /main navigation -->
+				
+			</div>
+		</div>
+		<!-- /sidebar -->
+
+        <div class="page-content">
+         
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+         
+      
+        </asp:ContentPlaceHolder>
+        </div>
+        </div>
+
+           
+        
+
+  
+</asp:Content>
+

@@ -1,0 +1,279 @@
+﻿using phani.Classes;
+using phani.MessageBox;
+using Phani.Modules;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Modules_Sales_Default : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            txtdiscount.Attributes.Add("onkeyup", "javascript:grosscalc();");
+            txttax.Attributes.Add("onkeyup", "javascript:grosscalc();");
+
+            txtInvoiceNo.Text = SM.SalesInvoice.SalesInvoice_AutoGenCode();
+            //  gvQuatation.DataBind();
+            SM.CustomerMaster.CustomerMaster_Select(ddlCustomer);
+            SM.CustomerMaster.CustomerUnit_Select(ddlUnit);
+            SM.SalesOrder.SalesOrder_Select(ddlSalesorderNo);
+            Masters.PaymentTerms.Payment_Select(ddlpaymentterms);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlpreparedby);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlapprovedby);
+
+            
+        }
+    }
+    protected void ddlSalesorderNo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.SalesOrder obj = new SM.SalesOrder();
+        if (obj.SalesOrder_Select(ddlSalesorderNo.SelectedItem.Value) > 0)
+        {
+            txtSOdate.Text = obj.SODATE;
+            ddlCustomer.SelectedValue = obj.Custid;
+            ddlCustomer_SelectedIndexChanged(sender, e);
+            ddlUnit.SelectedValue = obj.SiteId;
+            ddlUnit_SelectedIndexChanged(sender, e);
+            obj.SalesOrder_Select(ddlSalesorderNo.SelectedItem.Value, gvSoitems);
+        }
+    }
+
+
+
+    private DataTable CreateDataTable()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("Series");
+        dt.Columns.Add("Description");
+        dt.Columns.Add("Glass");
+        dt.Columns.Add("Mesh");
+        dt.Columns.Add("Width");
+        dt.Columns.Add("Height");
+        dt.Columns.Add("Qty");
+        dt.Columns.Add("Areasq");
+        dt.Columns.Add("Amount");
+        dt.Columns.Add("SeriesID");
+        dt.Columns.Add("Id");
+        dt.AcceptChanges();
+        return dt;
+    }
+
+    private DataTable AddRow(GridViewRow gvRow, DataTable dt)
+    {
+        DataRow[] dr = dt.Select("Description = '" + gvRow.Cells[2].Text + "'");
+        if (dr.Length <= 0)
+        {
+            dt.Rows.Add();
+            dt.Rows[dt.Rows.Count - 1]["Series"] = gvRow.Cells[1].Text;
+            dt.Rows[dt.Rows.Count - 1]["Description"] = gvRow.Cells[2].Text;
+            dt.Rows[dt.Rows.Count - 1]["Glass"] = gvRow.Cells[3].Text;
+            dt.Rows[dt.Rows.Count - 1]["Mesh"] = gvRow.Cells[4].Text;
+            dt.Rows[dt.Rows.Count - 1]["Width"] = gvRow.Cells[5].Text;
+            dt.Rows[dt.Rows.Count - 1]["Height"] = gvRow.Cells[6].Text;
+            dt.Rows[dt.Rows.Count - 1]["Qty"] = gvRow.Cells[7].Text;
+            dt.Rows[dt.Rows.Count - 1]["Areasq"] = gvRow.Cells[8].Text;
+            dt.Rows[dt.Rows.Count - 1]["Amount"] = gvRow.Cells[9].Text;
+            dt.Rows[dt.Rows.Count - 1]["SeriesID"] = gvRow.Cells[10].Text;
+            dt.Rows[dt.Rows.Count - 1]["Id"] = gvRow.Cells[10].Text;
+            dt.AcceptChanges();
+        }
+        return dt;
+    }
+
+    private DataTable RemoveRow(GridViewRow gvRow, DataTable dt)
+    {
+        DataRow[] dr = dt.Select("Description = '" + gvRow.Cells[2].Text + "'");
+        if (dr.Length > 0)
+        {
+            dt.Rows.Remove(dr[0]);
+            dt.AcceptChanges();
+        }
+        return dt;
+    }
+
+    private void GetData()
+    {
+        DataTable dt;
+        if (ViewState["SelectedRecords"] != null)
+            dt = (DataTable)ViewState["SelectedRecords"];
+        else
+            dt = CreateDataTable();
+        CheckBox chkAll = (CheckBox)gvSoitems.HeaderRow
+                            .Cells[0].FindControl("chkAll");
+        for (int i = 0; i < gvSoitems.Rows.Count; i++)
+        {
+            if (chkAll.Checked)
+            {
+                dt = AddRow(gvSoitems.Rows[i], dt);
+            }
+            else
+            {
+                CheckBox chk = (CheckBox)gvSoitems.Rows[i]
+                                .Cells[0].FindControl("chk");
+                if (chk.Checked)
+                {
+                    dt = AddRow(gvSoitems.Rows[i], dt);
+                }
+                else
+                {
+                    dt = RemoveRow(gvSoitems.Rows[i], dt);
+                }
+            }
+        }
+        ViewState["SelectedRecords"] = dt;
+    }
+
+    private void SetData()
+    {
+        CheckBox chkAll = (CheckBox)gvSoitems.HeaderRow.Cells[0].FindControl("chkAll");
+        chkAll.Checked = true;
+        if (ViewState["SelectedRecords"] != null)
+        {
+            DataTable dt = (DataTable)ViewState["SelectedRecords"];
+            for (int i = 0; i < gvSoitems.Rows.Count; i++)
+            {
+                CheckBox chk = (CheckBox)gvSoitems.Rows[i].Cells[0].FindControl("chk");
+                if (chk != null)
+                {
+                    DataRow[] dr = dt.Select("Description = '" + gvSoitems.Rows[i].Cells[2].Text + "'");
+                    chk.Checked = dr.Length > 0;
+                    if (!chk.Checked)
+                    {
+                        chkAll.Checked = false;
+                    }
+                }
+            }
+        }
+    }
+    protected void CheckBox_CheckChanged(object sender, EventArgs e)
+    {
+        GetData();
+        SetData();
+        BindSecondaryGrid();
+    }
+
+
+    private void BindSecondaryGrid()
+    {
+        DataTable dt = (DataTable)ViewState["SelectedRecords"];
+        gvitems.DataSource = dt;
+        gvitems.DataBind();
+    }
+
+
+
+    protected void gvitems_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+        {
+
+            e.Row.Cells[9].Visible = false;
+           
+        }
+       
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            txtGrossTotalAmtHidden.Value = txtsubtotal.Text = txttotal.Text = GrossAmountCalc().ToString();
+        }
+
+    }
+
+    private double GrossAmountCalc()
+    {
+        double _totalAmt = 0;
+        //  double gst = 0;
+        foreach (GridViewRow gvrow in gvitems.Rows)
+        {
+            _totalAmt = _totalAmt + Convert.ToDouble(gvrow.Cells[8].Text);
+        }
+        return _totalAmt;
+    }
+
+    protected void gvSoitems_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+        {
+
+            e.Row.Cells[10].Visible = false;
+            e.Row.Cells[11].Visible = false;
+
+        }
+    }
+    protected void ddlCustomer_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.CustomerMaster obj = new SM.CustomerMaster();
+        if(obj.CustomerMaster_Select(ddlCustomer.SelectedItem.Value) > 0)
+        {
+            txtbillingAddress.Text = obj.custaddress;
+        }
+    }
+    protected void ddlUnit_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.CustomerMaster obj = new SM.CustomerMaster();
+        if(obj.CustomerUnitMaster_Select(ddlUnit.SelectedItem.Value)>0)
+        {
+            txtplaceofsupply.Text = obj.UnitAddress;
+        }
+
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            SM.SalesInvoice objSM = new SM.SalesInvoice();
+            objSM.SINo = txtInvoiceNo.Text;
+            objSM.SIdate = General.toMMDDYYYY(txtinvoicedate.Text);
+            objSM.Duedate = General.toMMDDYYYY(txtduedate.Text);
+            objSM.Soid = ddlSalesorderNo.SelectedItem.Value;
+            objSM.PaymenttermsId = ddlpaymentterms.SelectedItem.Value;
+            objSM.Remarks = HttpUtility.HtmlEncode(txtremarks.Text);
+            objSM.Grandtotal = txttotal.Text;
+            objSM.BalanceDue = txttotal.Text;
+            objSM.Preparedby = ddlpreparedby.SelectedItem.Value;
+            objSM.Approvedby = ddlapprovedby.SelectedItem.Value;
+            objSM.Discount = txtdiscount.Text;
+            objSM.Tax = txttax.Text;
+            objSM.CustId = ddlCustomer.SelectedItem.Value;
+            objSM.UnitId = ddlUnit.SelectedItem.Value;
+
+
+
+            if (objSM.SalesInvoice_Save() == "Data Saved Successfully")
+            {
+                objSM.SalesInvoiceDetails_Delete(objSM.SIId);
+                foreach (GridViewRow gvrow in gvitems.Rows)
+                {
+                    objSM.Matid = gvrow.Cells[9].Text;
+                    objSM.Description = gvrow.Cells[1].Text;
+                    objSM.Mesh = gvrow.Cells[3].Text;
+                    objSM.Glass = gvrow.Cells[2].Text;
+                    objSM.Width = gvrow.Cells[4].Text;
+                    objSM.Height = gvrow.Cells[5].Text;
+                    objSM.Qty = gvrow.Cells[6].Text;
+                    objSM.Areasqmt = gvrow.Cells[7].Text;
+                    objSM.Amount = gvrow.Cells[8].Text;
+
+                    objSM.SalesInvoiceDetails_Save();
+                }
+
+                MessageBox.Show(this, "Data Saved Successfully");
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(this, ex.Message.ToString());
+        }
+        finally
+        {
+
+        }
+    }
+}

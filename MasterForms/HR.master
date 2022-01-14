@@ -1,0 +1,44 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="HR.master.cs" Inherits="MasterForms_HR" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+     
+
+    <div class="page-container">
+
+         	<!-- Sidebar -->
+		<div class="sidebar">
+			<div class="sidebar-content">
+
+				<!-- Main navigation -->
+				<ul class="navigation">
+				
+					<li>
+						<a href="#"><span>HR</span> <i class="icon-users"></i></a>
+						<ul>
+                              <li><a href="../Home.aspx">Home</a></li>
+                             <li><a href="../HR/EmployeeMaster.aspx">Employee Details</a></li>
+							 <li><a href="../HR/Users.aspx">Users</a></li>
+						</ul>
+					</li>
+					
+				</ul>
+				<!-- /main navigation -->
+				
+			</div>
+		</div>
+		<!-- /sidebar -->
+
+        <div class="page-content">
+         
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+        </div>
+        </div>
+        
+   
+</asp:Content>
+

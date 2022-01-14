@@ -1,0 +1,177 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="MaterialMaster_Details.aspx.cs" Inherits="Modules_Masters_MaterialMaster_Details" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <div class="page-title">
+            <h3>Material Master</h3>
+        </div>
+    </div>
+    <!-- /page header -->
+
+    <!-- Breadcrumbs line -->
+    <div class="breadcrumb-line">
+        <ul class="breadcrumb">
+            <li><a href="MaterialMaster.aspx">Material Master</a></li>
+            <li class="active">Material Basic Details</li>
+        </ul>
+    </div>
+    <!-- /breadcrumbs line -->
+     <div class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h6 class="panel-title"><i class="icon-pencil"></i>Material Basic Data</h6>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+               
+                    <div class="col-md-6">
+                        <label>Material Code: <span class="mandatory">*</span></label>
+                        <asp:TextBox ID="txtMaterialCode" CssClass="form-control" placeholder="Enter Material Code" runat="server"></asp:TextBox>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Material Name: <span class="mandatory">*</span></label>
+                        <asp:TextBox ID="txtMaterialName" CssClass="form-control" placeholder="Enter Material Name" runat="server"></asp:TextBox>
+                    </div>
+                
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">General Data</h6>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        
+                            <div class="col-md-3">
+                                <label>Basic Unit of Measure: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddluom" Width="100%" TabIndex="2" CssClass="select-full" placeholder="Select Unit of Measure" runat="server"></asp:DropDownList>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Material Group: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddlMaterialGroup" Width="100%" TabIndex="2" placeholder="Select Material Group" CssClass="select-full" runat="server"></asp:DropDownList>
+                            </div>
+                             <div class="col-md-3">
+                                <label>Material Type: <span class="mandatory">*</span></label>
+                               <asp:DropDownList ID="ddlMaterialType" Width="100%" TabIndex="2" placeholder="Select Material Type" CssClass="select-full" runat="server"></asp:DropDownList>
+
+                                </div>
+                            <div class="col-md-3">
+                                <label>Material Status: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddlMaterialStatus" Width="100%" TabIndex="2" CssClass="select-full" runat="server">
+                                    <asp:ListItem Value="1">Blank - No restriction</asp:ListItem>
+                                    <asp:ListItem Value="2">A- Warning Message</asp:ListItem>
+                                    <asp:ListItem Value="3">B - Error Message</asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                     
+                    </div>
+
+                    <div class="form-group">
+                        
+                            <div class="col-md-3">
+                                <label>Old Material Number: <span class="mandatory">*</span></label>
+                                <asp:TextBox ID="txtoldMaterialnumber" CssClass="form-control" placeholder="Enter Old Material No" runat="server"></asp:TextBox>
+                            </div>
+                             <div class="col-md-3">
+                                <label>Item Color: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddlColor" Width="100%" TabIndex="2" CssClass="select-full" runat="server"></asp:DropDownList>
+                            </div>
+                            <div class="col-md-3">
+                            <label>Standard Selling Price : <span class="mandatory">*</span></label>
+                            <asp:TextBox ID="txtMRP" CssClass="form-control" placeholder="Enter Selling Price" runat="server"></asp:TextBox>
+                        </div>
+                              <div class="col-md-3">
+                                <label>HSN/SAC: <span class="mandatory">*</span></label>
+                                 <asp:TextBox ID="txthsn" CssClass="form-control" placeholder="Enter HSN/SAC" runat="server"></asp:TextBox>
+                            </div>
+                            
+                      
+                    </div>
+
+                    <div class="form-group">
+                     
+                           
+                         <div class="col-md-12">
+                            <label>Description : <span class="mandatory">*</span></label>
+                            <asp:TextBox ID="txtDescription" TextMode="MultiLine" CssClass="form-control" placeholder="Enter Description" runat="server"></asp:TextBox>
+                        </div>
+
+                       
+                 
+                </div>
+
+                 
+           
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Dimensions/EANs</h6>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-group">
+                       
+                            <div class="col-md-6">
+                                <label>Gross Weight: <span class="mandatory">*</span></label>
+                                <asp:TextBox ID="txtgrossweight" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Weight Unit: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddlweightunit" Width="100%" TabIndex="2" CssClass="select-full" placeholder="Select Unit of Weight" runat="server"></asp:DropDownList>
+                            </div>
+                      
+                    </div>
+
+                    <div class="form-group">
+                       
+                            <div class="col-md-6">
+                                <label>Net Weight: <span class="mandatory">*</span></label>
+                                <asp:TextBox ID="txtNetweight" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                        
+                    </div>
+
+                    <div class="form-group">
+                       
+                            <div class="col-md-6">
+                                <label>Size/Dimensions <span class="mandatory">*</span></label>
+                                <asp:TextBox ID="txtDimensions" CssClass="form-control" runat="server"></asp:TextBox>
+                            </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Packing Material Data</h6>
+                </div>
+                <div class="panel-body">
+
+                    <div class="form-group">
+                       
+                            <div class="col-md-6">
+                                <label>Ref Material for Packing: <span class="mandatory">*</span></label>
+                                <asp:DropDownList ID="ddlpacking" Width="100%" TabIndex="2" CssClass="select-full" placeholder="Select Packing material" runat="server"></asp:DropDownList>
+                            </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions text-right">
+                <input id="btnreset" type="reset" class="btn btn-danger" value="Reset" />
+                <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="btnSave_Click" />
+            </div>
+        </div>
+    </div>
+    </div>
+        </div>
+         </div>
+</asp:Content>

@@ -1,0 +1,1035 @@
+﻿using phani.Classes;
+using phani.MessageBox;
+using Phani.Modules;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Modules_Sales_SalesQuotationDetails : System.Web.UI.Page
+{
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        txttax.Attributes.Add("onkeyup", "javascript:grosscalc();");
+        txtdiscount.Attributes.Add("onkeyup", "javascript:grosscalc();");
+        string Qid = Request.QueryString["Cid"].ToString();
+        if (!IsPostBack)
+        {
+           
+
+            gvitems.DataBind();
+
+
+
+           // SM.CustomerMaster.CustomerMaster_Select(ddlSoldtoParty);
+            Masters.PaymentTerms.Payment_Select(ddlpaymentterms);
+            Masters.SalesTermsConditions.SalesTermsConditions_Select(ddltermscondtions);
+            SM.CustomerMaster.CustomerUnit_Select(ddlsite);
+          //  Masters.IncoTerms.IncoTerms_Select(ddlincoterms);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlSalesEmployee);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlpreparedby);
+            HR.EmployeeMaster.EmployeeMaster_Select(ddlapprovedby);
+           // Masters.MaterialMaster.MaterialMaster_Select(ddlItemSeries);
+            SM.SalesEnquiry.SalesEnquiry_Select(ddlEnquiryNo);
+
+            Masters.SalesDamage.SalesDamage_Select(ddlDamageTerms);
+            Masters.Installationtech.Installationtech_Select(ddlInstallation);
+            Masters.SalesStorage.SalesStorage_Select(ddlStroageTerms);
+
+
+            txtdiscount.Text = txttax.Text = txttotal.Text = txtsubtotal.Text = "0";
+            txtquatationno.Text = SM.SalesQuotation.SalesQuotation_AutoGenCode();
+            txtquotationdate.Text = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            SM.CustomerMaster.CustomerMaster_Select(ddlcustomer);
+
+
+
+            if (Qid != "Add")
+            {
+
+                QuatationFill();
+                btnSave.Visible = false;
+            }
+            else
+            {
+                ddlpreparedby.SelectedValue = Alumil.Authentication.GetEmployeeInSession(Alumil.Authentication.Logged_EMP_Details.EmpId);
+                btnPrint.Visible = false;
+                btnRevise.Visible = false;
+                btnApprove.Visible = false;
+            }
+        }
+
+
+
+
+
+    }
+
+    private void QuatationFill()
+    {
+        SM.SalesQuotation obj = new SM.SalesQuotation();
+        if(obj.SalesQuotation_Select(Request.QueryString["Cid"].ToString()) > 0)
+        {
+            //btnRevise.Text = "Modify";
+            txtquatationno.Text = obj.QuotNo;
+            txtquotationdate.Text = obj.QuotDate;
+            ddlEnquiryNo.SelectedValue = obj.EnqId;
+            ddlEnquiryNo_SelectedIndexChanged(new object(), new System.EventArgs());
+            txtValidto.Text = obj.Validto;
+            ddlcustomer.SelectedValue = obj.CustId;
+            ddlcustomer_SelectedIndexChanged(new object(), new System.EventArgs());
+            ddlsite.SelectedValue = obj.UnitId;
+            ddlsite_SelectedIndexChanged(new object(), new System.EventArgs());
+            ddlSalesEmployee.SelectedValue = obj.SalesEmpId;
+            ddlpaymentterms.SelectedValue = obj.PaymentTermsId;
+            ddlpaymentterms_SelectedIndexChanged(new object(), new System.EventArgs());
+            ddltermscondtions.SelectedValue = obj.TermsCondtionId;
+            ddltermscondtions_SelectedIndexChanged(new object(), new System.EventArgs());
+            txtdiscount.Text = obj.Discount;
+            txttax.Text = obj.Tax;
+            txttotal.Text = obj.GrandTotal;
+            ddlpreparedby.SelectedValue = obj.Preparedby;
+            ddlapprovedby.SelectedValue = obj.Approvedby;
+            txtSpecifications.Text = HttpUtility.HtmlDecode(obj.Specifications);
+
+            ddlInstallation.SelectedValue = obj.InstallationtempId;
+            ddlInstallation_SelectedIndexChanged(new object(), new System.EventArgs());
+            ddlDamageTerms.SelectedValue = obj.DamagetempId;
+            ddlDamageTerms_SelectedIndexChanged(new object(), new System.EventArgs());
+            ddlStroageTerms.SelectedValue = obj.StroageTempId;
+            ddlStroageTerms_SelectedIndexChanged(new object(), new System.EventArgs());
+
+
+
+            obj.SalesQuotationDetails_Select(Request.QueryString["Cid"].ToString(), gvitems);
+        }
+    }
+    //protected void ddlSoldtoParty_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    SM.CustomerMaster.CustomerUnit_Select(ddlshiptoparty, ddlSoldtoParty.SelectedItem.Value);
+    //}
+    //#endregion
+    //protected void Button2_Click(object sender, EventArgs e)
+    //{
+    //    DataTable SalesOrderItems = new DataTable();
+    //    DataColumn col = new DataColumn();
+    //    col = new DataColumn("Series");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Description");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Glass");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Mesh");
+    //    SalesOrderItems.Columns.Add(col);
+       
+    //    col = new DataColumn("Width");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Height");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Qty");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("Areasq");
+    //    SalesOrderItems.Columns.Add(col);
+    //    col = new DataColumn("SeriesID");
+    //    SalesOrderItems.Columns.Add(col);
+     
+
+    //    if (gvitems.Rows.Count > 0)
+    //    {
+    //        foreach (GridViewRow gvrow in gvitems.Rows)
+    //        {
+    //            if (gvitems.SelectedIndex > -1)
+    //            {
+    //                if (gvrow.RowIndex == gvitems.SelectedRow.RowIndex)
+    //                {
+    //                    DataRow dr = SalesOrderItems.NewRow();
+    //                    dr["Series"] = ddlItemSeries.SelectedItem.Text;
+    //                    dr["Description"] = txtItemDescription.Text; ;
+    //                    dr["Glass"] = txtitemGlass.Text;
+    //                    dr["Mesh"] = txtitemMesh.Text;
+    //                    dr["Width"] = txtitemwidth.Text;
+    //                    dr["Height"] = txtHeight.Text;
+    //                    dr["Qty"] = txtitemqty.Text;
+    //                    dr["Areasq"] = txtareasq.Text;
+    //                    dr["SeriesID"] = ddlItemSeries.SelectedItem.Value;
+    //                    SalesOrderItems.Rows.Add(dr);
+    //                }
+    //                else
+    //                {
+    //                    DataRow dr = SalesOrderItems.NewRow();
+    //                    dr["Series"] = gvrow.Cells[2].Text;
+    //                    dr["Description"] = gvrow.Cells[3].Text;
+    //                    dr["Glass"] = gvrow.Cells[4].Text;
+    //                    dr["Mesh"] = gvrow.Cells[5].Text;
+    //                    dr["Width"] = gvrow.Cells[6].Text;
+    //                    dr["Height"] = gvrow.Cells[7].Text;
+    //                    dr["Qty"] = gvrow.Cells[8].Text;
+    //                    dr["Areasq"] = gvrow.Cells[9].Text;
+    //                    dr["SeriesID"] = gvrow.Cells[11].Text;
+                      
+    //                    SalesOrderItems.Rows.Add(dr);
+    //                }
+    //            }
+    //            else
+    //            {
+    //                DataRow dr = SalesOrderItems.NewRow();
+    //                dr["Series"] = gvrow.Cells[2].Text;
+    //                dr["Description"] = gvrow.Cells[3].Text;
+    //                dr["Glass"] = gvrow.Cells[4].Text;
+    //                dr["Mesh"] = gvrow.Cells[5].Text;
+    //                dr["Width"] = gvrow.Cells[6].Text;
+    //                dr["Height"] = gvrow.Cells[7].Text;
+    //                dr["Qty"] = gvrow.Cells[8].Text;
+    //                dr["Areasq"] = gvrow.Cells[9].Text;
+    //                dr["SeriesID"] = gvrow.Cells[11].Text;
+    //                SalesOrderItems.Rows.Add(dr);
+    //            }
+    //        }
+    //    }
+
+
+    //    if (gvitems.SelectedIndex == -1)
+    //    {
+    //        DataRow drnew = SalesOrderItems.NewRow();
+    //        drnew["Series"] = ddlItemSeries.SelectedItem.Text;
+    //        drnew["Description"] = txtItemDescription.Text; ;
+    //        drnew["Glass"] = txtitemGlass.Text;
+    //        drnew["Mesh"] = txtitemMesh.Text;
+    //        drnew["Width"] = txtitemwidth.Text;
+    //        drnew["Height"] = txtHeight.Text;
+    //        drnew["Qty"] = txtitemqty.Text;
+    //        drnew["Areasq"] = txtareasq.Text;
+    //        drnew["SeriesID"] = ddlItemSeries.SelectedItem.Value;
+    //        SalesOrderItems.Rows.Add(drnew);
+    //    }
+    //    gvitems.DataSource = SalesOrderItems;
+    //    gvitems.DataBind();
+    //    gvitems.SelectedIndex = -1;
+
+    //}
+    protected void gvitems_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+       
+            if (e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Cells[0].Visible =  false;
+               // e.Row.Cells[11].Visible = false;
+                
+            }
+
+            GridViewRow row = e.Row;
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                
+                    e.Row.Cells[1].Attributes.Add("onclick", "return confirm('Are you sure you want to remove this Item from Interested Products list?');");
+                    //TextBox qty = (TextBox)row.FindControl("txtitemqty");
+                    //TextBox price = (TextBox)row.FindControl("txtitemamount");
+                    //Label amount = (Label)row.FindControl("lblAmount");
+                    //amount.Text = (Convert.ToDecimal(qty) * Convert.ToDecimal(price.Text)).ToString();
+                   
+                   // amount.Text = amount;
+                   
+               
+            }
+
+        
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+           // e.Row.Cells[1].Attributes.Add("onclick", "return confirm('Are you sure you want to remove this Item from Item Details list?');");
+           // e.Row.Cells[10].Text =Math.Round(Convert.ToDecimal(e.Row.Cells[8].Text) * Convert.ToDecimal(txtRatepersqmt.Text)).ToString();
+           // string total = (gvitems.FindControl("txtitemamount") as TextBox).Text;
+           // string price = ((TextBox)e.Row.Cells[10].FindControl("txtitemamount")).Text;
+
+            //decimal _Price = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "txtitemamount")); 
+            //e.Row.Cells[11].Text = Math.Round(Convert.ToDecimal(e.Row.Cells[7].Text) * Convert.ToDecimal(_Price)).ToString();
+        }
+
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            txtsubtotal.Text = txttotal.Text = NetAmountCalc().ToString();
+           // GrandTotal();
+        }
+
+        
+    }
+
+    //private void GrandTotal()
+    //{
+    //    float GTotal = 0f;
+    //    for (int i = 0; i < gvitems.Rows.Count; i++)
+    //    {
+    //        String total = (gvitems.Rows[i].FindControl("txtitemamount") as TextBox).Text;
+    //        GTotal += Convert.ToSingle(total);
+    //    }
+    //    txtsubtotal.Text = GTotal.ToString();
+    //    txttotal.Text = GTotal.ToString();
+    //}
+
+    private double GrossAmountCalc()
+    {
+        double _totalAmt = 0;
+        //  double gst = 0;
+        foreach (GridViewRow gvrow in gvitems.Rows)
+        {
+
+
+
+            _totalAmt = _totalAmt + Convert.ToDouble(gvrow.Cells[11].Text);
+
+         //   string total = (gvrow.FindControl("txtitemamount") as TextBox).Text;
+
+           // _totalAmt = _totalAmt + Convert.ToDouble((gvrow.FindControl("txtitemamount") as TextBox).Text);
+
+        }
+        return _totalAmt;
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (btnSave.Text == "Save")
+        {
+            SalesQuotationSave();
+        }
+        else if (btnSave.Text == "Update")
+        {
+            SalesQuotationUpdate();
+        }
+    }
+
+    private void SalesQuotationUpdate()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SalesQuotationSave()
+    {
+        try
+        {
+            SM.SalesQuotation objSM = new SM.SalesQuotation();
+            objSM.QuotNo = txtquatationno.Text;
+            objSM.QuotDate = General.toMMDDYYYY(txtquotationdate.Text);
+            objSM.Quotto = ddlquotationto.SelectedItem.Value;
+
+            objSM.Validto = General.toMMDDYYYY(txtValidto.Text);
+            objSM.EnqId = ddlEnquiryNo.SelectedItem.Value;
+            objSM.CustId = ddlcustomer.SelectedItem.Value;
+            objSM.UnitId = ddlsite.SelectedItem.Value;
+
+            objSM.SalesEmpId = ddlSalesEmployee.SelectedItem.Value;
+            objSM.PaymentTermsId = ddlpaymentterms.SelectedItem.Value;
+            objSM.TermsCondtionId = ddltermscondtions.SelectedItem.Value;
+            objSM.Discount = txtdiscount.Text;
+            objSM.Tax = txttax.Text;
+            objSM.GrandTotal = txttotal.Text;
+            objSM.Preparedby = ddlpreparedby.SelectedItem.Value;
+            objSM.Approvedby = ddlapprovedby.SelectedItem.Value;
+
+
+            objSM.Specifications = HttpUtility.HtmlEncode(txtSpecifications.Text);
+            objSM.DamagetempId = ddlDamageTerms.SelectedItem.Value;
+            objSM.StroageTempId = ddlStroageTerms.SelectedItem.Value;
+            objSM.InstallationtempId = ddlInstallation.SelectedItem.Value;
+
+
+
+            objSM.Status = "New";
+
+            
+            
+            if (objSM.SalesQuotation_Save() == "Data Saved Successfully")
+            {
+                objSM.SalesQuotationDetails_Delete(objSM.QuotId);
+                foreach (GridViewRow gvrow in gvitems.Rows)
+                {
+                    objSM.Code = gvrow.Cells[2].Text;
+                    objSM.Width = gvrow.Cells[3].Text;
+                    objSM.Height = gvrow.Cells[4].Text;
+                    objSM.StillHeight = gvrow.Cells[5].Text;
+                    objSM.Series = gvrow.Cells[6].Text;
+
+                    TextBox qty = (TextBox)gvrow.FindControl("txtitemqty");
+                    objSM.Quantity = qty.Text;
+
+
+                    objSM.Glass = gvrow.Cells[8].Text;
+                    objSM.Flyscreen = gvrow.Cells[9].Text;
+                  
+                    TextBox Amount = (TextBox)gvrow.FindControl("txtitemamount");
+                    objSM.Amount = Amount.Text;
+
+                    Label totalamount = (Label)gvrow.FindControl("lblAmount");
+                    objSM.totalamount = totalamount.Text;
+
+                    objSM.SalesQuotationDetails_Save();
+                }
+               
+                MessageBox.Show(this, "Data Saved Successfully");
+            }
+            else
+            {
+                MessageBox.Show(this, "Some Data Missing");
+            }
+        }
+        catch (Exception ex)
+        {
+            
+            MessageBox.Show(this, ex.Message.ToString());
+        }
+        finally
+        {
+            SM.ClearControls(this);
+            SM.Dispose();
+            Response.Redirect("~/Modules/Sales/SalesQuotation.aspx");
+        }
+    }
+    protected void btnReset_Click(object sender, EventArgs e)
+    {
+        //ddlItemSeries.SelectedValue = "0";
+       
+        //txtItemDescription.Text = string.Empty;
+        //txtitemqty.Text = string.Empty;
+        //txtitemMesh.Text = string.Empty;
+        //txtitemGlass.Text = string.Empty;
+        //txtitemwidth.Text = string.Empty;
+        //txtHeight.Text = string.Empty;
+        //txtareasq.Text = string.Empty;
+        gvitems.SelectedIndex = -1;
+    }
+    protected void btnRevise_Click(object sender, EventArgs e)
+    {
+        try
+        { 
+            //if (btnRevise.Text == "Modify")
+            //{
+               
+            //   // btnSave.Enabled = true;
+            //   // QuatationFill();
+            //    btnRevise.Text = "Revise";
+            //}
+            //else if (btnRevise.Text == "Revise")
+            //{
+                SM.SalesQuotation objSM = new SM.SalesQuotation();
+                objSM.QuotId = Request.QueryString["Cid"].ToString();
+                objSM.QuotNo = txtquatationno.Text;
+                objSM.QuotDate = General.toMMDDYYYY(txtquotationdate.Text);
+                objSM.Quotto = ddlquotationto.SelectedItem.Value;
+
+                objSM.Validto = General.toMMDDYYYY(txtValidto.Text);
+                objSM.EnqId = ddlEnquiryNo.SelectedItem.Value;
+                objSM.CustId = ddlcustomer.SelectedItem.Value;
+                objSM.UnitId = ddlsite.SelectedItem.Value;
+
+                objSM.SalesEmpId = ddlSalesEmployee.SelectedItem.Value;
+                objSM.PaymentTermsId = ddlpaymentterms.SelectedItem.Value;
+                objSM.TermsCondtionId = ddltermscondtions.SelectedItem.Value;
+                objSM.Discount = txtdiscount.Text;
+                objSM.Tax = txttax.Text;
+                objSM.GrandTotal = txttotal.Text;
+                objSM.Preparedby = ddlpreparedby.SelectedItem.Value;
+                objSM.Approvedby = ddlapprovedby.SelectedItem.Value;
+
+                objSM.Status = "New";
+
+                objSM.Specifications = HttpUtility.HtmlEncode(txtSpecifications.Text);
+                objSM.DamagetempId = ddlDamageTerms.SelectedItem.Value;
+                objSM.StroageTempId = ddlStroageTerms.SelectedItem.Value;
+                objSM.InstallationtempId = ddlInstallation.SelectedItem.Value;
+
+                if (objSM.SalesQuotationRevise_Save() == "Data Saved Successfully")
+                {
+                    
+                    objSM.SalesQuotationDetails_Delete(objSM.QuotId);
+                    foreach (GridViewRow gvrow in gvitems.Rows)
+                    {
+                        objSM.Code = gvrow.Cells[2].Text;
+                        objSM.Width = gvrow.Cells[3].Text;
+                        objSM.Height = gvrow.Cells[4].Text;
+                        objSM.StillHeight = gvrow.Cells[5].Text;
+                        objSM.Series = gvrow.Cells[6].Text;
+
+                        TextBox qty = (TextBox)gvrow.FindControl("txtitemqty");
+                        objSM.Quantity = qty.Text;
+
+
+                        objSM.Glass = gvrow.Cells[8].Text;
+                        objSM.Flyscreen = gvrow.Cells[9].Text;
+
+                        TextBox Amount = (TextBox)gvrow.FindControl("txtitemamount");
+                        objSM.Amount = Amount.Text;
+
+                        Label totalamount = (Label)gvrow.FindControl("lblAmount");
+                        objSM.totalamount = totalamount.Text;
+
+                        objSM.SalesQuotationDetails_Save();
+                    }
+
+                    MessageBox.Show(this, "Data Saved Successfully");
+                   // Response.Redirect("~/Modules/Sales/SalesQuotation.aspx");
+
+
+                }
+                else
+                {
+                    MessageBox.Show(this, "Some Data Missing");
+                }
+            }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(this, ex.Message.ToString());
+        }
+        finally
+        {
+            SM.ClearControls(this);
+            SM.Dispose();
+            Response.Redirect("~/Modules/Sales/SalesQuotation.aspx");
+        }
+            
+            
+        
+        }
+    
+    protected void ddlEnquiryNo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.SalesEnquiry obj = new SM.SalesEnquiry();
+        if (obj.SalesEnquiry_Select(ddlEnquiryNo.SelectedItem.Value) > 0)
+        {
+            txtenquirydate.Text = obj.EnqDate;
+            //ddlSoldtoParty.SelectedValue = obj.CustId;
+            //ddlSoldtoParty_SelectedIndexChanged(sender, e);
+            //ddlshiptoparty.SelectedValue = obj.UnitId;
+
+            ddlcustomer.SelectedValue = obj.CustId;
+            ddlcustomer_SelectedIndexChanged(sender, e);
+
+            ddlsite.SelectedValue = obj.UnitId;
+            ddlsite_SelectedIndexChanged(sender, e);
+
+
+            ddlSalesEmployee.SelectedValue = obj.salesinchargeid;
+
+            txtSpecifications.Text = HttpUtility.HtmlDecode(obj.Specificaitons);
+
+            obj.SalesEnquiry_Select(ddlEnquiryNo.SelectedItem.Value, gvEnqItems);
+            General.GridBindwithCommand(gvElevationDrawings, "select * from Enquiry_ElevationDetails where ENQ_ID= '" + ddlEnquiryNo.SelectedItem.Value + "'");
+            General.GridBindwithCommand(gvFloorPlan, "select * from Enquiry_FloorPlanDetails where ENQ_ID= '" + ddlEnquiryNo.SelectedItem.Value + "'");
+            //if (obj.GlassDetails_Select(ddlEnquiryNo.SelectedItem.Value) > 0)
+            //{
+            //    txtglassspecification.Text = obj.GlassSpecification;
+            //    txtglassreceiveddate.Text = obj.GlassReceiveddate;
+            //    txtglassthick.Text = obj.Glassthick;
+            //    txtGlassremarks.Text = obj.GlassRemarks;
+
+            //}
+            //if (obj.FinishDetails_Select(ddlEnquiryNo.SelectedItem.Value) > 0)
+            //{
+            //    txtfinishcolor.Text = obj.FinishColor;
+            //    txtfinsihedReceiveddate.Text = obj.FinishReceiveddate;
+            //    txtfinishprofile.Text = obj.FinishProfile;
+            //    txtfinishremarks.Text = obj.FinishRemarks;
+            //}
+        }
+    }
+    protected void gvEnqItems_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.Header || e.Row.RowType == DataControlRowType.DataRow)
+        {
+           // e.Row.Cells[0].Visible = false;
+           // e.Row.Cells[7].Visible = false;
+
+        }
+    }
+    protected void gvitems_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
+        string x1 = gvitems.Rows[e.RowIndex].Cells[1].Text;
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("Series");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Description");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Glass");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Mesh");
+        SalesOrderItems.Columns.Add(col);
+
+        col = new DataColumn("Width");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Height");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Qty");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Areasq");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("SeriesID");
+        SalesOrderItems.Columns.Add(col);
+        if (gvitems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvitems.Rows)
+            {
+                if (gvrow.RowIndex != e.RowIndex)
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["Series"] = gvrow.Cells[2].Text;
+                    dr["Description"] = gvrow.Cells[3].Text;
+                    dr["Glass"] = gvrow.Cells[4].Text;
+                    dr["Mesh"] = gvrow.Cells[5].Text;
+                    dr["Width"] = gvrow.Cells[6].Text;
+                    dr["Height"] = gvrow.Cells[7].Text;
+                    dr["Qty"] = gvrow.Cells[8].Text;
+                    dr["Areasq"] = gvrow.Cells[9].Text;
+                    dr["SeriesID"] = gvrow.Cells[11].Text;
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+        gvitems.DataSource = SalesOrderItems;
+        gvitems.DataBind();
+    }
+    protected void btnAddItems_Click(object sender, EventArgs e)
+    {
+        DataTable SalesOrderItems = new DataTable();
+        DataColumn col = new DataColumn();
+        col = new DataColumn("CodeNo");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Width");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("height");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("SillHeight");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Series");
+        SalesOrderItems.Columns.Add(col);
+
+        col = new DataColumn("Qty");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Glass");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("FlyScreen");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("Amount");
+        SalesOrderItems.Columns.Add(col);
+        col = new DataColumn("TotalAmount");
+        SalesOrderItems.Columns.Add(col);
+
+
+        if (gvitems.Rows.Count > 0)
+        {
+            foreach (GridViewRow gvrow in gvitems.Rows)
+            {
+                if (gvitems.SelectedIndex > -1)
+                {
+                    if (gvrow.RowIndex == gvitems.SelectedRow.RowIndex)
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["CodeNo"] = txtCode.Text;
+                        dr["Width"] = txtwidth.Text; ;
+                        dr["height"] = txtheight.Text;
+                        dr["SillHeight"] = txtsillHeight.Text;
+                        dr["Series"] = txtseries.Text;
+                        dr["Qty"] = txtQuantity.Text;
+                        dr["Glass"] = txtGlass.Text;
+                        dr["FlyScreen"] = txtflyscreen.Text;
+
+                       // TextBox Itemamount = (TextBox)gvrow.FindControl("txtitemamount");
+                        dr["Amount"] = txtamount.Text;
+                        Label Totalamount = (Label)gvrow.FindControl("lblAmount");
+                        dr["TotalAmount"] = Totalamount.Text;
+                     
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                    else
+                    {
+                        DataRow dr = SalesOrderItems.NewRow();
+                        dr["CodeNo"] = gvrow.Cells[2].Text;
+                        dr["Width"] = gvrow.Cells[3].Text;
+                        dr["height"] = gvrow.Cells[4].Text;
+                        dr["SillHeight"] = gvrow.Cells[5].Text;
+                        dr["Series"] = gvrow.Cells[6].Text;
+                        dr["Qty"] = gvrow.Cells[7].Text;
+                        dr["Glass"] = gvrow.Cells[8].Text;
+                        dr["FlyScreen"] = gvrow.Cells[9].Text;
+                        dr["Amount"] = gvrow.Cells[10].Text;
+                        dr["TotalAmount"] = gvrow.Cells[11].Text;
+                        SalesOrderItems.Rows.Add(dr);
+                    }
+                }
+                else
+                {
+                    DataRow dr = SalesOrderItems.NewRow();
+                    dr["CodeNo"] = gvrow.Cells[2].Text;
+                    dr["Width"] = gvrow.Cells[3].Text;
+                    dr["height"] = gvrow.Cells[4].Text;
+                    dr["SillHeight"] = gvrow.Cells[5].Text;
+                    dr["Series"] = gvrow.Cells[6].Text;
+                   // dr["Qty"] = gvrow.Cells[7].Text;
+                    TextBox qty = (TextBox)gvrow.FindControl("txtitemqty");
+                    dr["Qty"] = qty.Text;
+
+
+                    dr["Glass"] = gvrow.Cells[8].Text;
+                    dr["FlyScreen"] = gvrow.Cells[9].Text;
+
+                        TextBox Itemamount = (TextBox)gvrow.FindControl("txtitemamount");
+                         dr["Amount"] = Itemamount.Text;
+
+                   // dr["Amount"] = gvrow.Cells[10].Text;
+
+                         Label amount = (Label)gvrow.FindControl("lblAmount");
+                         dr["TotalAmount"] = amount.Text;
+                    SalesOrderItems.Rows.Add(dr);
+                }
+            }
+        }
+
+
+        if (gvitems.SelectedIndex == -1)
+        {
+            DataRow drnew = SalesOrderItems.NewRow();
+            drnew["CodeNo"] = txtCode.Text;
+            drnew["Width"] = txtwidth.Text; ;
+            drnew["height"] = txtheight.Text;
+            drnew["SillHeight"] = txtsillHeight.Text;
+            drnew["Series"] = txtseries.Text;
+            drnew["Qty"] = txtQuantity.Text;
+            drnew["Glass"] = txtGlass.Text;
+            drnew["FlyScreen"] = txtflyscreen.Text;
+            //TextBox Itemamount = (TextBox)gvitems.FindControl("txtitemamount");
+            drnew["Amount"] = txtamount.Text;
+            
+            drnew["TotalAmount"] = (Convert.ToDecimal(txtQuantity.Text) * Convert.ToDecimal(txtamount.Text)).ToString() ;
+                     
+            SalesOrderItems.Rows.Add(drnew);
+        }
+        gvitems.DataSource = SalesOrderItems;
+        gvitems.DataBind();
+        gvitems.SelectedIndex = -1;
+    }
+    protected void ddlcustomer_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.CustomerMaster obj = new SM.CustomerMaster();
+
+        if(obj.CustomerMaster_Select(ddlcustomer.SelectedItem.Value)>0)
+        {
+            txtCustomerAddress.Text = obj.custaddress;
+            //txtshippingaddress.Text = obj.custaddress;
+            txtContactperson.Text = obj.CustName;
+            txtContactMobileNo.Text = obj.CustMobile;
+
+            SM.CustomerMaster.CustomerUnit_Select(ddlsite, ddlcustomer.SelectedItem.Value);
+
+
+
+
+        }
+    }
+    protected void ddlsite_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SM.CustomerMaster obj = new SM.CustomerMaster();
+
+        if(obj.CustomerUnitMaster_Select(ddlsite.SelectedItem.Value) > 0)
+        {
+            txtsiteaddress.Text = obj.UnitAddress;
+            txtsiteContactperson.Text = obj.UnitContactPerson;
+            txtsiteMobileno.Text = obj.UnitMobileNo;
+        }
+
+
+    }
+    protected void ddlpaymentterms_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.PaymentTerms obj = new Masters.PaymentTerms();
+
+        if(obj.Payment_Select(ddlpaymentterms.SelectedItem.Value)>0)
+        {
+            txtpaymenttermsdetails.Text = HttpUtility.HtmlDecode(obj.Desc);
+        }
+    }
+    protected void ddltermscondtions_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.SalesTermsConditions obj = new Masters.SalesTermsConditions();
+
+        if(obj.SalesTermsConditions_Select(ddltermscondtions.SelectedItem.Value)>0)
+        {
+
+            txttermsconditions.Text = HttpUtility.HtmlDecode(obj.Desc);
+
+        }
+
+    }
+
+
+
+    private DataTable CreateDataTable()
+    {
+        DataTable dt = new DataTable();
+        dt.Columns.Add("CodeNo");
+        dt.Columns.Add("Width");
+        dt.Columns.Add("height");
+        dt.Columns.Add("SillHeight");
+        dt.Columns.Add("Series");
+        dt.Columns.Add("Qty");
+        dt.Columns.Add("Glass");
+        dt.Columns.Add("FlyScreen");
+        dt.Columns.Add("Amount");
+        dt.Columns.Add("TotalAmount");
+
+        dt.Columns.Add("EnqDetId");
+
+
+
+
+
+        dt.AcceptChanges();
+        return dt;
+    }
+
+    private DataTable AddRow(GridViewRow gvRow, DataTable dt)
+    {
+        DataRow[] dr = dt.Select("EnqDetId = '" + gvRow.Cells[10].Text + "'");
+       // DataRow[] dr ;
+        if (dr.Length <= 0)
+        {
+            dt.Rows.Add();
+            dt.Rows[dt.Rows.Count - 1]["CodeNo"] = gvRow.Cells[1].Text;
+            dt.Rows[dt.Rows.Count - 1]["Width"] = gvRow.Cells[2].Text;
+            dt.Rows[dt.Rows.Count - 1]["height"] = gvRow.Cells[3].Text;
+            dt.Rows[dt.Rows.Count - 1]["SillHeight"] = gvRow.Cells[4].Text;
+            dt.Rows[dt.Rows.Count - 1]["Series"] = gvRow.Cells[5].Text;
+            dt.Rows[dt.Rows.Count - 1]["Qty"] = gvRow.Cells[6].Text;
+            dt.Rows[dt.Rows.Count - 1]["Glass"] = gvRow.Cells[7].Text;
+            dt.Rows[dt.Rows.Count - 1]["FlyScreen"] = gvRow.Cells[8].Text;
+            dt.Rows[dt.Rows.Count - 1]["Amount"] = "0";
+            dt.Rows[dt.Rows.Count - 1]["TotalAmount"] = "0";
+            dt.Rows[dt.Rows.Count - 1]["EnqDetId"] = gvRow.Cells[10].Text;
+
+            dt.AcceptChanges();
+        }
+        return dt;
+    }
+
+    private DataTable RemoveRow(GridViewRow gvRow, DataTable dt)
+    {
+        DataRow[] dr = dt.Select("EnqDetId = '" + gvRow.Cells[10].Text + "'");
+        if (dr.Length > 0)
+        {
+            dt.Rows.Remove(dr[0]);
+            dt.AcceptChanges();
+        }
+        return dt;
+    }
+
+    private void GetData()
+    {
+        DataTable dt;
+        if (ViewState["SelectedRecords"] != null)
+            dt = (DataTable)ViewState["SelectedRecords"];
+        else
+            dt = CreateDataTable();
+        CheckBox chkAll = (CheckBox)gvEnqItems.HeaderRow
+                            .Cells[0].FindControl("chkAll");
+        for (int i = 0; i < gvEnqItems.Rows.Count; i++)
+        {
+            if (chkAll.Checked)
+            {
+                dt = AddRow(gvEnqItems.Rows[i], dt);
+            }
+            else
+            {
+                CheckBox chk = (CheckBox)gvEnqItems.Rows[i]
+                                .Cells[0].FindControl("chk");
+                if (chk.Checked)
+                {
+                    dt = AddRow(gvEnqItems.Rows[i], dt);
+                }
+                else
+                {
+                    dt = RemoveRow(gvEnqItems.Rows[i], dt);
+                }
+            }
+        }
+        ViewState["SelectedRecords"] = dt;
+    }
+
+    private void SetData()
+    {
+        CheckBox chkAll = (CheckBox)gvEnqItems.HeaderRow.Cells[0].FindControl("chkAll");
+        chkAll.Checked = true;
+        if (ViewState["SelectedRecords"] != null)
+        {
+            DataTable dt = (DataTable)ViewState["SelectedRecords"];
+            for (int i = 0; i < gvEnqItems.Rows.Count; i++)
+            {
+                CheckBox chk = (CheckBox)gvEnqItems.Rows[i].Cells[0].FindControl("chk");
+                if (chk != null)
+                {
+                    DataRow[] dr = dt.Select("EnqDetId = '" + gvEnqItems.Rows[i].Cells[10].Text + "'");
+                    chk.Checked = dr.Length > 0;
+                    if (!chk.Checked)
+                    {
+                        chkAll.Checked = false;
+                    }
+                }
+            }
+        }
+    }
+    protected void CheckBox_CheckChanged(object sender, EventArgs e)
+    {
+        GetData();
+        SetData();
+        BindSecondaryGrid();
+    }
+
+
+    private void BindSecondaryGrid()
+    {
+        DataTable dt = (DataTable)ViewState["SelectedRecords"];
+        gvitems.DataSource = dt;
+        gvitems.DataBind();
+    }
+
+
+
+
+
+
+
+    protected void ddlquotationto_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        if(ddlquotationto.SelectedItem.Value == "Customer")
+        {
+            panelEnquirydetails.Visible = false;
+        }
+        else
+        {
+            panelEnquirydetails.Visible = true;
+        }
+    }
+    protected void txtitemamount_TextChanged(object sender, EventArgs e)
+    {
+        foreach (GridViewRow gvr in gvitems.Rows)
+        {
+            TextBox rate = (TextBox)gvr.FindControl("txtitemamount");
+            TextBox qty = (TextBox)gvr.FindControl("txtitemqty");
+            Label amount = (Label)gvr.FindControl("lblAmount");
+            
+            if (rate.Text != "" && qty.Text != "")
+            {
+                
+                    amount.Text = (Convert.ToDecimal(rate.Text) * Convert.ToDecimal(qty.Text)).ToString();
+                    txtsubtotal.Text = txttotal.Text = NetAmountCalc().ToString();
+
+                
+            }
+            else
+            {
+                amount.Text = "0";
+                txtsubtotal.Text = txttotal.Text = NetAmountCalc().ToString();
+
+            }
+        }
+    }
+
+    private double NetAmountCalc()
+    {
+        double _totalAmt = 0;
+        foreach (GridViewRow gvrow in gvitems.Rows)
+        {
+            Label amt = (Label)gvrow.FindControl("lblAmount");
+            if (amt.Text != "")
+            {
+                _totalAmt = _totalAmt + Convert.ToDouble(amt.Text);
+            }
+            else
+            {
+                _totalAmt = _totalAmt + 0;
+
+            }
+        }
+        return _totalAmt;
+    }
+
+    protected void btnApprove_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            SM.SalesQuotation objSMSOApprove = new SM.SalesQuotation();
+            objSMSOApprove.QuotId = Request.QueryString["Cid"].ToString();
+            objSMSOApprove.Approvedby = Alumil.Authentication.GetEmployeeInSession(Alumil.Authentication.Logged_EMP_Details.EmpId);
+            objSMSOApprove.SalesQuotationApprove_Update();
+
+            if (ddlEnquiryNo.SelectedItem.Value != "0")
+            {
+                objSMSOApprove.EnqId = ddlEnquiryNo.SelectedItem.Value;
+                objSMSOApprove.SalesEnquiryStatus_Update();
+            }
+
+          
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, ex.Message);
+        }
+        finally
+        {
+            Response.Redirect("~/Modules/Sales/SalesQuotation.aspx");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    protected void ddlInstallation_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.Installationtech obj = new Masters.Installationtech();
+
+        if (obj.Installationtech_Select(ddlInstallation.SelectedItem.Value) > 0)
+        {
+
+            txtInstallationTerms.Text = HttpUtility.HtmlDecode(obj.Desc);
+
+        }
+
+    }
+    protected void ddlDamageTerms_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.SalesDamage obj = new Masters.SalesDamage();
+
+        if (obj.SalesDamage_Select(ddlDamageTerms.SelectedItem.Value) > 0)
+        {
+
+            txtDamageterms.Text = HttpUtility.HtmlDecode(obj.Desc);
+
+        }
+    }
+    protected void ddlStroageTerms_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Masters.SalesStorage obj = new Masters.SalesStorage();
+
+        if (obj.SalesStorage_Select(ddlStroageTerms.SelectedItem.Value) > 0)
+        {
+
+            txtStroagetermsdetails.Text = HttpUtility.HtmlDecode(obj.Desc);
+
+        }
+    }
+}

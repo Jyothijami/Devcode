@@ -1,0 +1,381 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Mobile.master.cs" Inherits="Mobile" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+    <title>Alumil</title>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"  
+type="text/javascript"></script>   
+<!--include jQuery Validation Plugin-->  
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"  
+type="text/javascript"></script>  
+  
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" type="text/css"/>
+
+     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/londinium-theme.css" rel="stylesheet" type="text/css" />
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/select2.min.css" rel="stylesheet" type="text/css" />
+
+       <link rel="stylesheet" href='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.min.css'
+        media="screen" />
+   <%-- <link rel="stylesheet" href='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.css'
+        media="screen" />--%>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+
+       
+  
+     <script type="text/javascript">
+
+
+         $(document).ready(function () {
+
+             $(function () {
+                 initdropdown();
+
+             })
+
+         });
+
+
+
+         function initdropdown() {
+             $('.select-full').select2();
+             //$("#datatable-tasks").dataTable();
+
+         }
+
+
+    </script>
+
+
+
+   <%--<script type="text/javascript">
+       //On Page Load
+       $(function () {
+           $('[id*=hai]').prepend($("<thead></thead>").append($(this).find("tr:first"))).DataTable({
+               "responsive": true,
+               "sPaginationType": "full_numbers",
+               "paging": false,
+           });
+       });
+
+       //On UpdatePanel Refresh
+       //var prm = Sys.WebForms.PageRequestManager.getInstance();
+       //if (prm != null) {
+       //    prm.add_endRequest(function (sender, e) {
+       //        if (sender._postBackSettings.panelsToUpdate != null) {
+       //            $('[id*=hai]').prepend($("<thead></thead>").append($(this).find("tr:first"))).DataTable({
+       //                "responsive": true,
+       //                "sPaginationType": "full_numbers",
+       //                "paging": false,
+       //            });
+       //        }
+       //    });
+       //};
+</script>--%>
+
+
+
+
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server"  enctype="multipart/form-data">
+         <cc1:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+             <ControlBundles>
+             <cc1:ControlBundle Name="Group2" />
+             </ControlBundles>
+         </cc1:ToolkitScriptManager>
+
+
+       
+   
+      <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional"  >
+            <ContentTemplate>
+                 
+        <script type="text/javascript">
+
+            Sys.Application.add_load(initdropdown);
+
+        </script>
+        
+        <!-- Navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img src="/images/logo.png" alt="Alumil" /></a>
+
+                 <%-- <a class="sidebar-toggle"><i class="icon-paragraph-justify2"></i></a>--%>
+                        
+
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                            <span class="sr-only">Toggle menu</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>
+
+                     <%--   <button type="button" class="navbar-toggle offcanvas">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>--%>
+
+
+
+            </div>
+
+            <ul class="nav navbar-nav collapse" id="navbar-menu">
+
+
+
+
+                  
+
+
+
+                <li><asp:HyperLink ID="lbtnmasters" runat="server" NavigateUrl="~/MobileDr.aspx"><i class="icon-arrow-right"></i><span>Daily Report</span></asp:HyperLink></li>
+                <li><asp:HyperLink ID="lbldetails" runat="server" NavigateUrl="~/MobileDrDetails.aspx"><i class="icon-arrow-right"></i><span>Daily Report Details</span></asp:HyperLink></li>
+                     <li><asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Mobiletodo.aspx"><i class="icon-arrow-right"></i><span>To Do List</span></asp:HyperLink></li>
+                <li><asp:HyperLink ID="lbladmin" runat="server" NavigateUrl="~/Drt.aspx"><i class="icon-archive"></i><span>Admin Reports</span></asp:HyperLink></li>
+                
+                
+                                <li><asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/SalesEnqMobile.aspx"><i class="icon-arrow-right"></i><span>Enquiry</span></asp:HyperLink></li>
+                
+                <li><asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/MobileLogin.aspx"><i class="icon-exit"></i><span>Logout</span></asp:HyperLink></li>
+
+
+
+               <%--   <li><asp:HyperLink ID="lbtnsales" runat="server" NavigateUrl="~/Modules/Sales/SalesHome.aspx"><i class="icon-stats-up"></i><span>Sales</span></asp:HyperLink></li>
+    --%>             <%--   <li><asp:HyperLink ID="lbtnPurchases" runat="server" NavigateUrl="~/Modules/Purchases/PurchaseHome.aspx"><i class="icon-tags"></i><span>Purchases</span></asp:HyperLink></li>
+                  <li><a href="../Stock/ManufacturingHome.aspx"><i class="icon-cube"></i><span>Manufacture</span></a></li>
+                  <li><a href="../Stock/StockHome.aspx"><i class="icon-stack"></i><span>Stock</span></a></li>
+                  <li><a href="#"><i class="icon-coin"></i><span>Finance</span></a></li>
+                  <li><asp:HyperLink ID="lbtnHr" runat="server" NavigateUrl="~/Modules/HR/HrHome.aspx"><i class="icon-user"></i><span>HR</span></asp:HyperLink></li>--%>
+               
+              
+                
+                
+                
+                  
+                <asp:Label ID="lblUserid" runat="server" Text="0" Visible="False"></asp:Label>
+            </ul>
+
+
+
+
+
+
+
+            <ul class="nav navbar-nav navbar-right collapse" id="navbar-icons">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <li class="user dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <asp:Image  alt="" ID="image1" CssClass="img-rounded" runat="server" />
+                        <span>
+                        <asp:Label ID="lblUserName" runat="server" Text=""></asp:Label></span>
+                        <asp:Label ID="lblEmpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <asp:Label ID="lblCpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <i class="caret"></i>
+                    </a>
+                 
+                </li>
+            </ul>
+       
+            
+            
+            
+            
+            
+             </div>
+        <!-- /navbar -->
+
+        <!-- Page container -->
+
+
+                <div class="" style ="margin-top:58px"></div>
+
+                <div class="page-container">
+
+
+               
+
+                    
+
+
+                  <%--  <div class="page-content">--%>
+                        <!-- Page content -->
+                       <%-- <div class="page-content-inner">--%>
+
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+
+                           <%-- </div>--%>
+                    </div>
+
+
+<%--                </div>--%>
+        <!-- /page container -->
+                
+   
+         </ContentTemplate>
+        </asp:UpdatePanel>
+
+      
+        
+    </form>
+    
+
+     <%--  <script type="text/ecmascript" src='<%= ResolveUrl("~/select/select2.js") %>'></script>--%>
+ 
+   <%-- <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery-ui.min.js") %>'></script>--%>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/bootstrap.min.js") %>'></script>
+   
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/interface/datatables.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/validate.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/select2.min.js") %>'></script>
+    <script type="text/javascript" src='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.min.js'> </script>
+    
+
+   
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        $(function () {
+
+
+
+            /* # Default Layout Options
+     ================================================== */
+
+            //===== Wrapping content inside .page-content =====//
+
+            $('.page-content').wrapInner('<div class="page-content-inner"></div>');
+
+
+
+            //===== Applying offcanvas class =====//
+
+            $(document).on('click', '.offcanvas', function () {
+                $('body').toggleClass('offcanvas-active');
+            });
+
+
+
+            //===== Default navigation =====//
+
+            $('.navigation').find('li.active').parents('li').addClass('active');
+            $('.navigation').find('li').not('.active').has('ul').children('ul').addClass('hidden-ul');
+            $('.navigation').find('li').has('ul').children('a').parent('li').addClass('has-ul');
+
+
+            $(document).on('click', '.sidebar-toggle', function (e) {
+                e.preventDefault();
+
+                $('body').toggleClass('sidebar-narrow');
+
+                if ($('body').hasClass('sidebar-narrow')) {
+                    $('.navigation').children('li').children('ul').css('display', '');
+
+                    $('.sidebar-content').hide().delay().queue(function () {
+                        $(this).show().addClass('animated fadeIn').clearQueue();
+                    });
+                }
+
+                else {
+                    $('.navigation').children('li').children('ul').css('display', 'none');
+                    $('.navigation').children('li.active').children('ul').css('display', 'block');
+
+                    $('.sidebar-content').hide().delay().queue(function () {
+                        $(this).show().addClass('animated fadeIn').clearQueue();
+                    });
+                }
+            });
+
+
+            $('.navigation').find('li').has('ul').children('a').on('click', function (e) {
+                e.preventDefault();
+
+                if ($('body').hasClass('sidebar-narrow')) {
+                    $(this).parent('li > ul li').not('.disabled').toggleClass('active').children('ul').slideToggle(250);
+                    $(this).parent('li > ul li').not('.disabled').siblings().removeClass('active').children('ul').slideUp(250);
+                }
+
+                else {
+                    $(this).parent('li').not('.disabled').toggleClass('active').children('ul').slideToggle(250);
+                    $(this).parent('li').not('.disabled').siblings().removeClass('active').children('ul').slideUp(250);
+                }
+            });
+
+
+
+            //===== Panel Options (collapsing, closing) =====//
+
+            /* Collapsing */
+            $('[data-panel=collapse]').click(function (e) {
+                e.preventDefault();
+                var $target = $(this).parent().parent().next('div');
+                if ($target.is(':visible')) {
+                    $(this).children('i').removeClass('icon-arrow-up9');
+                    $(this).children('i').addClass('icon-arrow-down9');
+                }
+                else {
+                    $(this).children('i').removeClass('icon-arrow-down9');
+                    $(this).children('i').addClass('icon-arrow-up9');
+                }
+                $target.slideToggle(200);
+            });
+
+            /* Closing */
+            $('[data-panel=close]').click(function (e) {
+                e.preventDefault();
+                var $panelContent = $(this).parent().parent().parent();
+                $panelContent.slideUp(200).remove(200);
+            });
+
+
+
+            //===== Disabling main navigation links =====//
+
+            $('.navigation .disabled a, .navbar-nav > .disabled > a').click(function (e) {
+                e.preventDefault();
+            });
+
+
+
+        });
+
+
+
+    </script>
+</body>
+</html>

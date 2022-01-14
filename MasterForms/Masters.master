@@ -1,0 +1,57 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/MasterForms/NLMain.master" AutoEventWireup="true" CodeFile="Masters.master.cs" Inherits="MasterForms_Masters" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+  
+
+            <div class="page-container">
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="sidebar-content">
+
+                        <!-- Main navigation -->
+                        <ul class="navigation">
+
+                            <li>
+                                <a href="#"><span>Masters</span> <i class="icon-wrench"></i></a>
+                                <ul>
+                                    <li><a href="../Home.aspx">Home</a></li>
+                                    <li><a href="../Masters/CompanySetup.aspx">Company</a></li>
+                                    <li><a href="../Masters/Category.aspx">Category</a></li>
+                                <%--    <li><a href="../Masters/SubCategory.aspx">Sub Category</a></li>--%>
+                                    <li><a href="../Masters/Department.aspx">Department</a></li>
+                                    <li><a href="../Masters/Designation.aspx">Designation</a></li>
+                                    <li><a href="../Masters/Plant.aspx">Plant</a></li>
+                                    <li><a href="../Masters/Region.aspx">Region</a></li>
+                                    <li><a href="../Masters/Dispatch.aspx">Dispatch</a></li>
+                                    <li><a href="../Masters/Enquiry.aspx">Enquiry</a></li>
+                                    <li><a href="../Masters/UOM.aspx">UOM</a></li>
+                                    <li><a href="../Masters/MaterialType.aspx">Material Type</a></li>
+                                    <li><a href="../Masters/PackingMaterial.aspx">Packing Material</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- /main navigation -->
+                    </div>
+                </div>
+                <!-- /sidebar -->
+
+                <div class="page-content">
+
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+
+                     <!-- Footer -->
+	        <div class="footer clearfix">
+		        <div class="pull-left">&copy; 2018 Valueline. All Rights Reserved</div>
+	        	
+	        </div>
+	        <!-- /footer -->
+                </div>
+            </div>
+        
+</asp:Content>

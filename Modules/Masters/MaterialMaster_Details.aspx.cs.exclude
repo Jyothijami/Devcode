@@ -1,0 +1,108 @@
+﻿using phani.MessageBox;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class Modules_Masters_MaterialMaster_Details : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+       if(!IsPostBack)
+       {
+           UOM_Fill();
+           MaterialGroup_Fill();
+           MaterialStatus_Fill();
+           PackingMaterial_Fill();
+           Color_Fill();
+           MaterialTYpe_Fill();
+       }
+    }
+
+    private void MaterialTYpe_Fill()
+    {
+        Masters.MaterialType.MaterialType_Select(ddlMaterialType);
+    }
+
+    private void Color_Fill()
+    {
+        Masters.ColorMaster.Color_Select(ddlColor);
+    }
+
+    private void PackingMaterial_Fill()
+    {
+        Masters.PackingMaterial.PackingMaterial_Select(ddlpacking);
+    }
+
+    private void MaterialStatus_Fill()
+    {
+        Masters.MaterialStatus.MaterialStatus_Select(ddlMaterialStatus);
+    }
+
+    private void MaterialGroup_Fill()
+    {
+        Masters.MaterialGroup.MaterialGroup_Select(ddlMaterialGroup);
+    }
+
+    private void UOM_Fill()
+    {
+        Masters.UnitMaster.UnitMaster_Select(ddluom);
+        Masters.UnitMaster.UnitMaster_Select(ddlweightunit);
+    }
+
+
+
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (btnSave.Text == "Save")
+        {
+            MaterialMasterSave();
+        }
+        else if (btnSave.Text == "Update")
+        {
+            
+        }
+    }
+
+    private void MaterialMasterSave()
+    {
+        try
+        {
+            Masters.MaterialMaster obj = new Masters.MaterialMaster();
+
+            obj.MatCode = txtMaterialCode.Text;
+            obj.Uomid = ddluom.SelectedItem.Value;
+            obj.MGId = ddlMaterialGroup.SelectedItem.Value;
+            obj.OldMaterialNumber = txtoldMaterialnumber.Text;
+            obj.Grossweight = txtgrossweight.Text;
+            obj.WeightUnit = ddlweightunit.SelectedItem.Value;
+            obj.NetWeight = txtNetweight.Text;
+            obj.Sizedimensions = txtDimensions.Text;
+            obj.PackMaterialid = ddlpacking.SelectedItem.Value;
+            obj.Matstatus = ddlMaterialStatus.SelectedItem.Value;
+            obj.Matname = txtMaterialName.Text;
+            obj.MatTpyeId = ddlMaterialType.SelectedItem.Value;
+            obj.MatDrawings = "0";
+            obj.ColorId = ddlColor.SelectedItem.Value;
+            obj.MRP = txtMRP.Text;
+            obj.SSP = txtMRP.Text;
+            obj.ItemDescription = txtDescription.Text;
+            obj.HSN = txthsn.Text;
+
+            MessageBox.Show(this, obj.MaterialMaster_BasicData_Save());
+        }
+        catch (Exception ex)
+        {
+
+            MessageBox.Show(this, ex.Message.ToString());
+        }
+        finally
+        {
+            Masters.ClearControls(this);
+            Masters.Dispose();
+        }
+    }
+}

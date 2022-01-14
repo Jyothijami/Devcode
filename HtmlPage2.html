@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.9/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.9/datatables.min.js"></script>
+
+
+
+   
+
+
+    
+
+       
+           
+
+
+
+            </head>
+            <body> 
+                <script type="text/javascript">
+                    function inittable(data) {
+                        //console.log(data);
+                        $('#photos').DataTable({
+                            "aaData": data
+                        });
+                    }
+    </script>
+
+                <script type="text/javascript">
+
+
+                    var arrayReturn = [];
+                    $.ajax({
+                        url: "http://localhost:60949/Testing.asmx/Get",
+                        async: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            for (var i = 0, len = data.length; i < len; i++) {
+                                var desc = data[i].body;
+                                arrayReturn.push([data[i].COUNTRY_ID, '<a href="http://google.com" target="_blank">' + data[i].COUNTRY_NAME + '</a>', CURRENCY.substring(0, 12)]);
+                            }
+                            inittable(arrayReturn);
+                        }
+                    });
+
+
+                </script>
+
+                    <table id="photos" class="display" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Title</th>
+                                <th>Body</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+
+
+
+
+                </body>
+                </html>

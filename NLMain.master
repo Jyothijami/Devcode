@@ -1,0 +1,581 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="NLMain.master.cs" Inherits="Main" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
+    <title>Alumil</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"  
+type="text/javascript"></script>   
+<!--include jQuery Validation Plugin-->  
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"  
+type="text/javascript"></script>  
+  
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" type="text/css"/>
+
+     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/londinium-theme.css" rel="stylesheet" type="text/css" />
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="/css/select2.min.css" rel="stylesheet" type="text/css" />
+
+       <link rel="stylesheet" href='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.min.css'
+        media="screen" />
+   <%-- <link rel="stylesheet" href='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.css'
+        media="screen" />--%>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+
+       
+  
+     <script type="text/javascript">
+
+
+         $(document).ready(function () {
+
+             $(function () {
+                 initdropdown();
+
+             })
+
+         });
+
+        
+
+             function initdropdown() {
+                 $('select.select-full').select2();
+                  //$("#datatable-tasks").dataTable();
+
+             }
+       
+
+    </script>
+
+
+
+   <%--<script type="text/javascript">
+       //On Page Load
+       $(function () {
+           $('[id*=hai]').prepend($("<thead></thead>").append($(this).find("tr:first"))).DataTable({
+               "responsive": true,
+               "sPaginationType": "full_numbers",
+               "paging": false,
+           });
+       });
+
+       //On UpdatePanel Refresh
+       //var prm = Sys.WebForms.PageRequestManager.getInstance();
+       //if (prm != null) {
+       //    prm.add_endRequest(function (sender, e) {
+       //        if (sender._postBackSettings.panelsToUpdate != null) {
+       //            $('[id*=hai]').prepend($("<thead></thead>").append($(this).find("tr:first"))).DataTable({
+       //                "responsive": true,
+       //                "sPaginationType": "full_numbers",
+       //                "paging": false,
+       //            });
+       //        }
+       //    });
+       //};
+</script>--%>
+
+
+
+
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+
+     
+
+
+
+
+    <form id="form1" runat="server"  enctype="multipart/form-data">
+         <cc1:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server" >
+             <ControlBundles>
+             <cc1:ControlBundle Name="Group2" />
+             </ControlBundles>
+         </cc1:ToolkitScriptManager>
+
+
+       
+   
+      <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional"  >
+            <ContentTemplate>
+                 
+        <script type="text/javascript">
+            
+            Sys.Application.add_load(initdropdown);
+           
+        </script>
+        
+        <!-- Navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img src="/images/logo.png" alt="Alumil" /></a>
+
+                  <a class="sidebar-toggle"><i class="icon-paragraph-justify2"></i></a>
+                        
+
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                            <span class="sr-only">Toggle menu</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>
+
+                        <button type="button" class="navbar-toggle offcanvas">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="icon-paragraph-justify2"></i>
+                        </button>
+
+
+
+            </div>
+
+            <ul class="nav navbar-nav collapse" id="navbar-menu">
+
+                  <%--    <li><asp:HyperLink ID="lbtnmasters" runat="server" NavigateUrl="~/Modules/Masters/MastersHome.aspx"><i class="icon-wrench2"></i><span>Masters</span></asp:HyperLink></li>
+                  <%--  <li><asp:LinkButton ID="lbtnSales" OnClick="lbtnSales_Click" Text="" runat="server"><i class="icon-stats-up"></i><span>Sales</span></asp:LinkButton> </li>--%>
+                  <%--  <li><asp:HyperLink ID="lbtnsales" runat="server" NavigateUrl="~/Modules/Sales/SalesHome.aspx"><i class="icon-stats-up"></i><span>Sales</span></asp:HyperLink></li>
+                  <li><asp:HyperLink ID="lbtnPurchases" runat="server" NavigateUrl="~/Modules/Purchases/PurchaseHome.aspx"><i class="icon-tags"></i><span>Purchases</span></asp:HyperLink></li>
+                  <li><a href="../Stock/ManufacturingHome.aspx"><i class="icon-cube"></i><span>Manufacture</span></a></li>
+                  <li><a href="../Stock/StockHome.aspx"><i class="icon-stack"></i><span>Stock</span></a></li>
+                  <li><a href="#"><i class="icon-coin"></i><span>Finance</span></a></li>
+                  <li><asp:HyperLink ID="lbtnHr" runat="server" NavigateUrl="~/Modules/HR/HrHome.aspx"><i class="icon-user"></i><span>HR</span></asp:HyperLink></li>--%>
+               
+              
+                
+                
+                
+                   <%-- <li><a href="../Masters/MastersHome.aspx"><span>Masters</span><i class="icon-wrench2"></i></a></li>--%>
+                   <%-- <li><a href="../Sales/SalesHome.aspx"><i class="icon-stats-up"></i><span>Sales</span></a></li>--%>
+                    
+                 <asp:Repeater ID="Repeater1" runat="server" >
+
+                        <ItemTemplate>
+
+                         <li>   <asp:LinkButton ID="lbtnPrivilege" CausesValidation="False"  CssClass="" 
+                                Font-Underline="false" runat="server" OnClick="Privilege_Click" Text='<%# Bind("menu") %>'></asp:LinkButton></li>
+                        </ItemTemplate>
+                    </asp:Repeater>
+               <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:DBCon %>"
+                                SelectCommand="SP_PERMISSIONS" SelectCommandType="StoredProcedure">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="lblUserid" DefaultValue="1" Name="SearchValue" PropertyName="Text"
+                                        Type="String" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>--%>
+                <asp:Label ID="lblUserid" runat="server" Text="0" Visible="False"></asp:Label>
+            </ul>
+
+
+
+
+
+
+
+            <ul class="nav navbar-nav navbar-right collapse" id="navbar-icons">
+
+
+            <li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown">
+					<i class="icon-people"></i>
+					
+				</a>
+				<div class="popup dropdown-menu dropdown-menu-right">
+					<div class="popup-header">
+						<a href="#" class="pull-left"><i class="icon-spinner7"></i></a>
+						<span>Activity</span>
+						<a href="#" class="pull-right"><i class="icon-paragraph-justify"></i></a>
+					</div>
+	                <ul class="activity">
+                     <%-- <ul class="dropdown-menu dropdown-menu-right icons-right">--%>
+
+                          <asp:Repeater ID="Repeater2" runat="server" >
+
+                        <ItemTemplate>
+
+                         <li>
+                             <i class="icon-checkbox-checked text-success"></i>
+                             <div>
+                                
+
+                                 <asp:Label ID="Label1" runat="server" Text='<%#Bind("ago")%>'></asp:Label>
+                                 <%--by<asp:Label ID="Label2" runat="server" Text='<%# Bind("empname") %>'></asp:Label>--%>
+                                 
+                                 
+                             <%--  <span>  <asp:Label ID="Label3" runat="server" Text='<%# Bind("Ago") %>'></asp:Label> </span>--%>
+
+
+
+                            </div>
+                             </li>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+
+
+	                </ul>
+                </div>
+			</li>
+
+              
+
+
+
+
+
+
+
+
+
+
+
+                   <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-mail2"></i>
+					
+                       
+                       
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right icons-right">
+                        <li>
+                        <asp:LinkButton ID="lbtnmail" OnClick="lbtnmail_Click" Text="" runat="server"><i class="icon-mail4"></i><span>Mail Box</span></asp:LinkButton> </li>
+                      
+                    </ul>
+                </li>
+
+
+
+
+
+
+                <li class="user dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <asp:Image  alt="" ID="image1" CssClass="img-rounded" runat="server" />
+                        <span>
+                        <asp:Label ID="lblUserName" runat="server" Text=""></asp:Label></span>
+                        <asp:Label ID="lblEmpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <asp:Label ID="lblCpIdHidden" Visible="false" runat="server" Text=""></asp:Label>
+                        <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right icons-right">
+                        <li><a href="#"><i class="icon-user"></i>Profile</a></li>
+                        <li><a href="#"><i class="icon-cog"></i>Settings</a></li>
+                        <li><a href="~/Login.aspx" runat="server"><i class="icon-exit"></i>Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+       
+            
+            
+            
+            
+            
+             </div>
+        <!-- /navbar -->
+
+        <!-- Page container -->
+
+                <div class="page-container">
+
+
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <div class="sidebar-content" style="margin-top:0px">
+
+                            <!-- User dropdown -->
+                            <div class="user-menu dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <asp:Image runat="server" ID="imag2" CssClass="img-rounded"  alt=""/>
+                                    <div class="user-info">
+                                        <asp:Label ID="lblName" runat="server" Text=""></asp:Label> <span>
+                                            <asp:Label ID="lblDesgination" runat="server" Text=""></asp:Label></span>
+                                    </div>
+                                </a>
+                                <div class="popup dropdown-menu dropdown-menu-right">
+                                    <div class="thumbnail">
+                                        <div class="thumb">
+                                            <asp:Image runat="server" ID="imag3" alt="" CssClass="img-rounded" />
+                                            <div class="thumb-options">
+                                                <span>
+                                                    <a href="#" class="btn btn-icon btn-success"><i class="icon-pencil"></i></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="caption text-center">
+                                            <h6><asp:Label ID="lblname3" runat="server" Text=""></asp:Label>  <small><asp:Label ID="lbldepart" runat="server" Text=""></asp:Label></small></h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /user dropdown -->
+
+
+                            <!-- Main navigation -->
+                            <ul class="navigation">
+                                <li class="active"><a href="#"><span>Dashboard</span> <i class="icon-screen2"></i></a></li>
+                                <li>
+                                   <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Modules/HR/PersonalInformation.aspx"><span>Personal Information</span><i class="icon-user"></i></asp:HyperLink>
+                                </li>
+
+                                  <li>
+                                    <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Modules/Sales/DyReport.aspx"><span>Daily Report</span><i class="icon-newspaper"></i></asp:HyperLink>
+                                   
+                                </li>
+
+                                  <li>
+                                    <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Modules/Sales/ToDoList.aspx"><span>To Do List</span><i class="icon-flag"></i></asp:HyperLink>
+                                   
+                                </li>
+                                <li>
+                                    <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Modules/HR/ChangePassword.aspx"><span>Change Password</span><i class="icon-key"></i></asp:HyperLink>
+                                   
+                                </li>
+
+
+
+                                <li>
+                                    
+                                    <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Modules/LeaveApplication_Details.aspx?Cid=Add"><span>Apply Leave</span><i class="icon-plus-circle"></i></asp:HyperLink>
+                                  
+                                </li>
+
+                                  <li>
+                                    
+                                    <asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Modules/LeaveApproval.aspx?Cid=Add"><span>HOD Leave Approval</span><i class="icon-arrow"></i></asp:HyperLink>
+                                  
+                                </li>
+
+                                 <li>
+                                    
+                                    <asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Modules/DashLeave.aspx"><span>Leave Status</span><i class="icon-star"></i></asp:HyperLink>
+                                  
+                                </li>
+                                  <li>
+                                    
+                                    <asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Modules/HR/PaySlip_New.aspx"><span>Pay Slip</span><i class="icon-star"></i></asp:HyperLink>
+                                  
+                                </li>
+                              
+                            </ul>
+
+
+
+
+              
+
+                          
+
+	             
+                            <!-- /main navigation -->
+
+                        </div>
+                    </div>
+                    <!-- /sidebar -->
+
+
+
+
+                    <div class="page-content">
+                        <!-- Page content -->
+                        <div class="page-content-inner">
+
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+
+                            </div>
+                    </div>
+
+
+                </div>
+        <!-- /page container -->
+                
+   
+         </ContentTemplate>
+        </asp:UpdatePanel>
+
+      
+        
+    </form>
+    
+
+     <%--  <script type="text/ecmascript" src='<%= ResolveUrl("~/select/select2.js") %>'></script>--%>
+ 
+   <%-- <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/jquery-ui.min.js") %>'></script>--%>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/bootstrap.min.js") %>'></script>
+   
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/interface/datatables.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/validate.min.js") %>'></script>
+    <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/forms/select2.min.js") %>'></script>
+    <script type="text/javascript" src='https://cdn.jsdelivr.net/sweetalert2/6.3.8/sweetalert2.min.js'> </script>
+    
+
+   
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        $(function () {
+
+
+
+                   /* # Default Layout Options
+            ================================================== */
+
+            //===== Wrapping content inside .page-content =====//
+
+            $('.page-content').wrapInner('<div class="page-content-inner"></div>');
+
+
+
+            //===== Applying offcanvas class =====//
+
+            $(document).on('click', '.offcanvas', function () {
+                $('body').toggleClass('offcanvas-active');
+            });
+
+
+
+            //===== Default navigation =====//
+
+            $('.navigation').find('li.active').parents('li').addClass('active');
+            $('.navigation').find('li').not('.active').has('ul').children('ul').addClass('hidden-ul');
+            $('.navigation').find('li').has('ul').children('a').parent('li').addClass('has-ul');
+
+
+            $(document).on('click', '.sidebar-toggle', function (e) {
+                e.preventDefault();
+
+                $('body').toggleClass('sidebar-narrow');
+
+                if ($('body').hasClass('sidebar-narrow')) {
+                    $('.navigation').children('li').children('ul').css('display', '');
+
+                    $('.sidebar-content').hide().delay().queue(function () {
+                        $(this).show().addClass('animated fadeIn').clearQueue();
+                    });
+                }
+
+                else {
+                    $('.navigation').children('li').children('ul').css('display', 'none');
+                    $('.navigation').children('li.active').children('ul').css('display', 'block');
+
+                    $('.sidebar-content').hide().delay().queue(function () {
+                        $(this).show().addClass('animated fadeIn').clearQueue();
+                    });
+                }
+            });
+
+
+            $('.navigation').find('li').has('ul').children('a').on('click', function (e) {
+                e.preventDefault();
+
+                if ($('body').hasClass('sidebar-narrow')) {
+                    $(this).parent('li > ul li').not('.disabled').toggleClass('active').children('ul').slideToggle(250);
+                    $(this).parent('li > ul li').not('.disabled').siblings().removeClass('active').children('ul').slideUp(250);
+                }
+
+                else {
+                    $(this).parent('li').not('.disabled').toggleClass('active').children('ul').slideToggle(250);
+                    $(this).parent('li').not('.disabled').siblings().removeClass('active').children('ul').slideUp(250);
+                }
+            });
+
+
+
+            //===== Panel Options (collapsing, closing) =====//
+
+            /* Collapsing */
+            $('[data-panel=collapse]').click(function (e) {
+                e.preventDefault();
+                var $target = $(this).parent().parent().next('div');
+                if ($target.is(':visible')) {
+                    $(this).children('i').removeClass('icon-arrow-up9');
+                    $(this).children('i').addClass('icon-arrow-down9');
+                }
+                else {
+                    $(this).children('i').removeClass('icon-arrow-down9');
+                    $(this).children('i').addClass('icon-arrow-up9');
+                }
+                $target.slideToggle(200);
+            });
+
+            /* Closing */
+            $('[data-panel=close]').click(function (e) {
+                e.preventDefault();
+                var $panelContent = $(this).parent().parent().parent();
+                $panelContent.slideUp(200).remove(200);
+            });
+
+
+
+            //===== Disabling main navigation links =====//
+
+            $('.navigation .disabled a, .navbar-nav > .disabled > a').click(function (e) {
+                e.preventDefault();
+            });
+
+
+
+        });
+
+
+
+
+
+        //===== Loading button =====//
+
+        $('.btn-loading').click(function () {
+            var btn = $(this)
+            btn.button('loading')
+            setTimeout(function () {
+                btn.button('reset')
+            }, 3000)
+        });
+
+
+        //===== Add fadeIn animation to dropdown =====//
+
+        $('.dropdown, .btn-group').on('show.bs.dropdown', function (e) {
+            $(this).find('.dropdown-menu').first().stop(true, true).fadeIn(100);
+        });
+
+
+        //===== Add fadeOut animation to dropdown =====//
+
+        $('.dropdown, .btn-group').on('hide.bs.dropdown', function (e) {
+            $(this).find('.dropdown-menu').first().stop(true, true).fadeOut(100);
+        });
+
+
+        //===== Prevent dropdown from closing on click =====//
+
+        $('.popup').click(function (e) {
+            e.stopPropagation();
+        });
+
+
+    </script>
+    
+
+   <%-- <script type="text/ecmascript" src='<%= ResolveUrl("~/js/plugins/interface/jgrowl.min.js") %>'></script>--%>
+
+</body>
+
+
+   
+</html>

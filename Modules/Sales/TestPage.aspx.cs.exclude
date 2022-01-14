@@ -1,0 +1,159 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using phani.Classes;
+using System.Data;
+using phani.MessageBox;
+using System.Web.Services;
+using System.Web.Script.Services;
+using Syncfusion.JavaScript.DataSources;
+public partial class Modules_Sales_TestPage : System.Web.UI.Page
+{
+     DataTable dt = new DataTable();
+
+     List<test> Test = new List<test>();
+     test obj = new test();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+       // General obj = new General();
+       // dt =   obj.ReturnDataTable("select * from Test");
+       // Session["SqlDataSource"] = dt;
+
+       // FlatGrid.DataSource = (DataTable)Session["SqlDataSource"];
+       // FlatGrid.DataBind();
+       // Masters.MaterialMaster.MaterialMaster_Select(hello);
+       //// Masters.MaterialMaster.MaterialMaster_Select(ddlhai);
+       // ddlhai.DataSource = dt;
+
+        dt = obj.gettest();
+
+        if(dt.Rows.Count > 0)   
+        {
+            for(int i=0;i<dt.Rows.Count;i++)
+            {
+                test ob = new test();
+                ob.id = dt.Rows[i]["id"].ToString();
+                ob.name = dt.Rows[i]["Name"].ToString();
+                ob.address = dt.Rows[i]["address"].ToString();
+                Test.Add(ob);
+            }
+        }
+
+
+
+        this.FlatGrid.DataSource = Test;
+        this.FlatGrid.DataBind();
+
+
+
+    }
+
+
+
+    [Serializable]
+
+    public class test
+    {
+        public test()
+        {
+
+        }
+
+        public test(string id,string name,string address )
+        {
+            this.id = id;
+            this.name = name;
+            this.address = address;
+
+        }
+
+
+        public string id { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+
+        public string restult;
+        General objgen = new General();
+        DataTable dt;
+
+        public string Addtest(test obj)
+        {
+            string sql = "insert into  Test( id,Name,address) values('" + obj.id + "','" + obj.name + "','" + obj.address + "')";
+            restult = objgen.ReturnExecuteNoneQuery(sql);
+            return restult;
+        }
+
+
+        public DataTable gettest()
+        {
+
+            string sql = "select * from Test";
+            dt = objgen.ReturnDataTable(sql);
+            return dt;
+        }
+
+
+
+    }
+
+   
+
+
+
+
+
+   
+
+
+
+
+
+
+
+    protected void FlatGrid_ServerRowSelected(object sender, Syncfusion.JavaScript.Web.GridEventArgs e)
+    {
+       
+        
+        MessageBox.Show(this, "Data Saved Successfully");
+
+
+    }
+
+
+
+
+
+
+
+
+    protected void button_Click(object sender, EventArgs e)
+    {
+         //var index = this.FlatGrid.SelectedRowIndex;     //get the index of the selected row in current
+         //   List<test> data = Test as List<test>;
+         //   if(this.FlatGrid.PageSettings.CurrentPage > 1)
+         //      index = this.FlatGrid.PageSettings.PageSize * (this.FlatGrid.PageSettings.CurrentPage - 1) + index;        //get index to retrieve the data from the dataSource based on the pagesize and currenpage
+         //   var selectedData = data[index];    //selectedData contains the current selected Row data
+
+
+        var index = this.FlatGrid.SelectedRowIndex;    //get the index of the selected row in current
+
+        DataOperations ds = new DataOperations();
+
+        var data1 = ds.Execute(Test, this.FlatGrid.Model); // passed the grid dataSource and grid dataSource in DataOperations execute method
+
+        if (this.FlatGrid.PageSettings.CurrentPage > 1)
+
+            index = this.FlatGrid.PageSettings.PageSize * (this.FlatGrid.PageSettings.CurrentPage - 1) + index;
+
+        var selectedRecord = data1.Cast<test>().ToList()[index]; // get the selected records from the filtered records
+
+
+
+
+        } 
+    
+}
